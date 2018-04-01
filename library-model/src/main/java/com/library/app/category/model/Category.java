@@ -1,6 +1,8 @@
 package com.library.app.category.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -8,13 +10,15 @@ import java.util.Objects;
  * @author gabriel.freitas
  */
 @Entity
-@Table(name = "Category")
+@Table(name = "category")
 public class Category implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "O nome deve ser informado")
+    @Size(min = 2, max = 25, message = "O nome deve conter entre 2 e 25 caracteres")
     @Column(unique = true, name = "NAME")
     private String name;
 

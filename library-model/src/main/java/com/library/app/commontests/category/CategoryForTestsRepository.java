@@ -28,6 +28,11 @@ public class CategoryForTestsRepository {
         return new Category("Networks");
     }
 
+    public static Category categoryWithId(Category category, Long id) {
+        category.setId(id);
+        return category;
+    }
+
     public static List<Category> allCategories() {
         return Arrays.asList(java(), cleanCode(), architecture(), networks());
     }

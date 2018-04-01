@@ -1,24 +1,31 @@
 
-Java EE 7
+# Aplicação Java EE
+
+Java EE
 
 JPA 2.1
+
 Bean Validation 1.1
+
 JMS 2.0
+
 EJB 3.2
+
 CDI 1.1
+
 JAX-RS 2.0
 
-Java 8: 
-Lambda expressions, Date and Time API, streams and more.
+Java 8 lambda expressions, Date and Time API, streams, etc
 
-Libraries: 
 Gson, JUnit, Mockito and Hamcrest.
 
-Arquillian for integration tests.
+Arquillian
 
-Wildfly 9 as Application Server.
+Wildfly como servidor de aplicação
 
-PostgreSQL for production and HSQLDB/H2 for unit and integration tests.
+PostgreSQL
+
+HSQLDB/H2 para testes unitários e de integração
 
 Maven
 

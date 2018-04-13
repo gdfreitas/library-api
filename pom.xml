@@ -78,6 +78,7 @@
     </dependencyManagement>
     <modules>
         <module>library-model</module>
+        <module>library-resource</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

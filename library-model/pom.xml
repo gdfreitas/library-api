@@ -5,7 +5,7 @@
     <parent>
         <artifactId>library-app</artifactId>
         <groupId>com.library</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -29,12 +29,6 @@
             <artifactId>hibernate-validator</artifactId>
             <version>5.1.3.Final</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

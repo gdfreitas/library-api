@@ -25,6 +25,7 @@ public class CategoryResourceUTest {
 
     private static final String PATH_RESOURCE = "categories";
     private CategoryResource categoryResource;
+
     @Mock
     private CategoryServices categoryServices;
 
@@ -33,6 +34,7 @@ public class CategoryResourceUTest {
         MockitoAnnotations.initMocks(this);
         categoryResource = new CategoryResource();
 
+        categoryResource.categoryJsonConverter = new CategoryJsonConverter();
         categoryResource.categoryServices = categoryServices;
     }
 

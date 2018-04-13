@@ -1,0 +1,7 @@
+com\library\app\category\services\impl\CategoryServicesImpl.class
+com\library\app\common\exception\FieldNotValidException.class
+com\library\app\category\exception\CategoryExistentException.class
+com\library\app\category\exception\CategoryNotFoundException.class
+com\library\app\category\model\Category.class
+com\library\app\category\repository\CategoryRepository.class
+com\library\app\category\services\CategoryServices.class

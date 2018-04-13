@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.library.app.category.repository.CategoryRepositoryUTest
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.753 sec - in com.library.app.category.repository.CategoryRepositoryUTest

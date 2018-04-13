@@ -74,6 +74,17 @@
                 <version>1.2.3</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>com.library</groupId>
+                <artifactId>library-model</artifactId>
+                <version>${project.version}}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.library</groupId>
+                <artifactId>library-model</artifactId>
+                <version>${project.version}}</version>
+                <type>test-jar</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <modules>

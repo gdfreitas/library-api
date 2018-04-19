@@ -6,7 +6,9 @@ package com.library.app.common.model;
 public enum HttpStatusCode {
 
     CREATED(201),
-    UNPROCESSABLE_ENTITY(422);
+    UNPROCESSABLE_ENTITY(422),
+    OK(200),
+    NOT_FOUND(404);
 
     private int statusCode;
 

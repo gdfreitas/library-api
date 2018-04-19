@@ -1,0 +1,15 @@
+{
+  "paging": {
+    "totalRecords": 2
+  },
+  "entries": [
+    {
+      "id": 1,
+      "name": "Java"
+    },
+    {
+      "id": 2,
+      "name": "Networks"
+    }
+  ]
+}

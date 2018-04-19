@@ -53,8 +53,8 @@ public class CategoryServicesImpl implements CategoryServices {
     }
 
     @Override
-    public List<Category> findAll(final String orderField) {
-        return repository.findAll(orderField);
+    public List<Category> findAll() {
+        return repository.findAll("name");
     }
 
     private void validate(final Category category) {

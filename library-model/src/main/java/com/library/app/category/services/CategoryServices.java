@@ -18,5 +18,5 @@ public interface CategoryServices {
 
     Category findById(Long id) throws CategoryNotFoundException;
 
-    List<Category> findAll(final String orderField);
+    List<Category> findAll();
 }

@@ -140,7 +140,7 @@ public class CategoryServicesUTest {
     public void findAllCategoriesWhenEmpty() {
         when(categoryRepository.findAll("name")).thenReturn(new ArrayList<>());
 
-        List<Category> categories = categoryServices.findAll("name");
+        List<Category> categories = categoryServices.findAll();
         assertThat(categories.isEmpty(), is(equalTo(true)));
     }
 
@@ -149,7 +149,7 @@ public class CategoryServicesUTest {
         when(categoryRepository.findAll("name"))
                 .thenReturn(Arrays.asList(categoryWithId(java(), 1L), categoryWithId(networks(), 2L)));
 
-        List<Category> categories = categoryServices.findAll("name");
+        List<Category> categories = categoryServices.findAll();
         assertThat(categories.size(), is(equalTo(2)));
         assertThat(categories.get(0).getName(), is(equalTo(java().getName())));
         assertThat(categories.get(1).getName(), is(equalTo(networks().getName())));
@@ -157,7 +157,7 @@ public class CategoryServicesUTest {
 
     private void addCategoryWithInvalidName(final String name) {
         try {
-            categoryServices.add(new Category());
+            categoryServices.add(new Category(name));
             fail("should have thrown an error");
         } catch (final FieldNotValidException e) {
             assertThat(e.getFieldName(), is(equalTo("name")));

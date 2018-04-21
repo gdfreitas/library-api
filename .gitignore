@@ -92,3 +92,7 @@ derby.log
 ######################
 
 .factorypath
+
+# Maven
+*/target/*
+**/target/**

@@ -2,15 +2,19 @@ package com.library.app.category.repository;
 
 import com.library.app.category.model.Category;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
 /**
  * @author gabriel.freitas
  */
+@Stateless
 public class CategoryRepository {
 
+    @PersistenceContext
     protected EntityManager em;
 
     public Category add(final Category category) {

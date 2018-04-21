@@ -11,6 +11,56 @@
     <artifactId>library-app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>JBoss repository</id>
+            <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+        </repository>
+    </repositories>
+
+    <modules>
+        <module>library-model</module>
+        <module>library-resource</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-client</artifactId>
+                <version>3.0.2.Final</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.skyscreamer</groupId>
+                <artifactId>jsonassert</artifactId>
+                <version>1.2.3</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.library</groupId>
+                <artifactId>library-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.library</groupId>
+                <artifactId>library-model</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
@@ -55,45 +105,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>2.3.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-client</artifactId>
-                <version>3.0.2.Final</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.skyscreamer</groupId>
-                <artifactId>jsonassert</artifactId>
-                <version>1.2.3</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.library</groupId>
-                <artifactId>library-model</artifactId>
-                <version>${project.version}}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.library</groupId>
-                <artifactId>library-model</artifactId>
-                <version>${project.version}}</version>
-                <type>test-jar</type>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    <modules>
-        <module>library-model</module>
-        <module>library-resource</module>
-    </modules>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+
 
     <!-- configurações de build -->
     <build>
@@ -144,7 +156,6 @@
         </plugins>
     </build>
 
-    <!-- informações do projeto -->
     <name>Library Application</name>
     <description>To be done</description>
     <url>https://github.com/gdfreitas/javaee-library-application</url>
@@ -171,17 +182,5 @@
             </roles>
         </developer>
     </developers>
-
-    <!-- configurações de ambiente -->
-    <repositories>
-        <repository>
-            <id>JBoss repository</id>
-            <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-        </repository>
-        <repository>
-            <id>Maven Repository</id>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </repository>
-    </repositories>
 
 </project>

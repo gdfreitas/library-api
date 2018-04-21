@@ -17,7 +17,6 @@
         <dependency>
             <groupId>com.library</groupId>
             <artifactId>library-model</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -38,7 +37,6 @@
             <artifactId>library-model</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

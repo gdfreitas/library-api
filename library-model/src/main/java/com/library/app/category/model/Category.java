@@ -17,9 +17,9 @@ public class Category implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "O nome deve ser informado")
-    @Size(min = 2, max = 25, message = "O nome deve conter entre 2 e 25 caracteres")
-    @Column(unique = true, name = "NAME")
+    @NotNull(message = "may not be null")
+    @Size(min = 2, max = 25)
+    @Column(unique = true)
     private String name;
 
     public Category() {

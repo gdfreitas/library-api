@@ -28,7 +28,7 @@ public class JsonTestUtils {
         }
     }
 
-    public static void assertJsonMatchesFileContent(String actualJson, String fileNameWithExpectedJson) {
+    public static void assertJsonMatchesFileContent(final String actualJson, final String fileNameWithExpectedJson) {
         assertJsonMatchesExpectedJson(actualJson, readJsonFile(fileNameWithExpectedJson));
     }
 

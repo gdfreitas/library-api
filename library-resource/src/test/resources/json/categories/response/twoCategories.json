@@ -1,15 +1,15 @@
 {
-  "paging": {
-    "totalRecords": 2
-  },
-  "entries": [
-    {
-      "id": 1,
-      "name": "Java"
+    "paging": {
+        "totalRecords": 2
     },
-    {
-      "id": 2,
-      "name": "Networks"
-    }
-  ]
+    "entries": [
+		{
+			"id": 1,
+			"name": "Java"
+		},    
+		{
+			"id": 2,
+			"name": "Networks"
+		}
+    ]
 }

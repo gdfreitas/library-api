@@ -74,7 +74,7 @@ public class CategoryResource {
 
     @PUT
     @Path("/{id: [0-9]+}")
-    public Response update(final Long id, final String body) {
+    public Response update(@PathParam("id") final Long id, final String body) {
         LOGGER.debug("Updating the category {} with body {}", id, body);
         final Category category = categoryJsonConverter.convertFrom(body);
         category.setId(id);

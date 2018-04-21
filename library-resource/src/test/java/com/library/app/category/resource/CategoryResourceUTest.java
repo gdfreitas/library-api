@@ -6,6 +6,7 @@ import com.library.app.category.model.Category;
 import com.library.app.category.services.CategoryServices;
 import com.library.app.common.exception.FieldNotValidException;
 import com.library.app.common.model.HttpStatusCode;
+import com.library.app.commontests.utils.ResourceDefinitions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,29 +14,25 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import javax.ws.rs.core.Response;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.library.app.commontests.category.CategoryForTestsRepository.categoryWithId;
-import static com.library.app.commontests.category.CategoryForTestsRepository.java;
-import static com.library.app.commontests.category.CategoryForTestsRepository.networks;
+import static com.library.app.commontests.category.CategoryForTestsRepository.*;
 import static com.library.app.commontests.utils.FileTestNameUtils.getPathFileRequest;
 import static com.library.app.commontests.utils.FileTestNameUtils.getPathFileResponse;
 import static com.library.app.commontests.utils.JsonTestUtils.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author gabriel.freitas
  */
 public class CategoryResourceUTest {
 
-    private static final String PATH_RESOURCE = "categories";
+    private static final String PATH_RESOURCE = ResourceDefinitions.CATEGORY.getResourceName();
+
     private CategoryResource categoryResource;
 
     @Mock
@@ -118,6 +115,7 @@ public class CategoryResourceUTest {
 
         final Response response = categoryResource.update(2L,
                 readJsonFile(getPathFileRequest(PATH_RESOURCE, "category.json")));
+
         Assert.assertThat(response.getStatus(), is(equalTo(HttpStatusCode.NOT_FOUND.getStatusCode())));
         assertJsonResponseByFile(response, "categoryNotFound.json");
     }

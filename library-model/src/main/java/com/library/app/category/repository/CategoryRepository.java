@@ -34,7 +34,7 @@ public class CategoryRepository {
         em.merge(category);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     public List<Category> findAll(final String orderField) {
         return em.createQuery("Select e From Category e Order by e." + orderField).getResultList();
     }
@@ -57,6 +57,7 @@ public class CategoryRepository {
         return !query.setMaxResults(1).getResultList().isEmpty();
     }
 
+    @SuppressWarnings("all")
     public boolean existsById(final Long id) {
         return !em.createQuery("Select 1 From Category e where e.id = :id")
                 .setParameter("id", id)

@@ -2,6 +2,7 @@ package com.library.app.commontests.utils;
 
 import org.junit.Ignore;
 
+@Ignore
 public enum ResourceDefinitions {
 
     CATEGORY("categories");

@@ -9,7 +9,7 @@
     <!-- configurações básicas -->
     <groupId>com.library</groupId>
     <artifactId>library-app</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>

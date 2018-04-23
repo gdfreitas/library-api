@@ -1,7 +1,9 @@
 package com.library.app.common.repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
@@ -9,12 +11,22 @@ import java.util.List;
  */
 public abstract class GenericRepository<T> {
 
-    protected abstract Class<T> getPersistentClass();
+    private final Class<T> type;
 
-    protected abstract EntityManager getEntityManager();
+    // FIXME: public?
+    @PersistenceContext
+    public EntityManager em;
+
+    public GenericRepository() {
+        this.type = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    public Class<T> getType() {
+        return this.type;
+    }
 
     public T add(final T entity) {
-        getEntityManager().persist(entity);
+        em.persist(entity);
         return entity;
     }
 
@@ -23,29 +35,29 @@ public abstract class GenericRepository<T> {
             return null;
         }
 
-        return getEntityManager().find(getPersistentClass(), id);
+        return em.find(type, id);
     }
 
     public void update(final T entity) {
-        getEntityManager().merge(entity);
+        em.merge(entity);
     }
 
     @SuppressWarnings("unchecked")
     public List<T> findAll(final String orderField) {
-        return getEntityManager().createQuery(
-                "Select e From " + getPersistentClass().getSimpleName() + " e Order by e." + orderField)
+        return em.createQuery(
+                "Select e From " + type.getSimpleName() + " e Order by e." + orderField)
                 .getResultList();
     }
 
     public boolean alreadyExists(final String propertyName, final String propertyValue, final Long id) {
         final StringBuilder jpql = new StringBuilder();
-        jpql.append("Select 1 From " + getPersistentClass().getSimpleName() + " e where e." + propertyName
+        jpql.append("Select 1 From " + type.getSimpleName() + " e where e." + propertyName
                 + " = :propertyValue");
         if (id != null) {
             jpql.append(" and e.id != :id");
         }
 
-        final Query query = getEntityManager().createQuery(jpql.toString());
+        final Query query = em.createQuery(jpql.toString());
         query.setParameter("propertyValue", propertyValue);
         if (id != null) {
             query.setParameter("id", id);
@@ -55,8 +67,8 @@ public abstract class GenericRepository<T> {
     }
 
     public boolean existsById(final Long id) {
-        return getEntityManager()
-                .createQuery("Select 1 From " + getPersistentClass().getSimpleName() + " e where e.id = :id")
+        return em
+                .createQuery("Select 1 From " + type.getSimpleName() + " e where e.id = :id")
                 .setParameter("id", id)
                 .setMaxResults(1)
                 .getResultList().size() > 0;

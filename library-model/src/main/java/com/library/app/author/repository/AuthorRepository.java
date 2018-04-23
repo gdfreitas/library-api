@@ -6,8 +6,6 @@ import com.library.app.common.model.PaginatedData;
 import com.library.app.common.repository.GenericRepository;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.HashMap;
 import java.util.List;
@@ -19,19 +17,6 @@ import java.util.Objects;
  */
 @Stateless
 public class AuthorRepository extends GenericRepository<Author> {
-
-    @PersistenceContext
-    protected EntityManager em;
-
-    @Override
-    protected Class<Author> getPersistentClass() {
-        return Author.class;
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
 
     @SuppressWarnings("all")
     public PaginatedData<Author> findByFilter(final AuthorFilter filter) {

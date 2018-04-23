@@ -1,45 +1,36 @@
 package com.library.app.author.repository;
 
 import com.library.app.author.model.Author;
-import com.library.app.commontests.utils.DBCommandTransactionalExecutor;
+import com.library.app.author.model.filter.AuthorFilter;
+import com.library.app.common.model.PaginatedData;
+import com.library.app.common.model.filter.PaginationData;
+import com.library.app.commontests.utils.TestBaseRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import static com.library.app.commontests.author.AuthorForTestsRepository.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 
 /**
  * @author gabriel.freitas
  */
-public class AuthorRepositoryUTest {
+public class AuthorRepositoryUTest extends TestBaseRepository {
 
-    private EntityManagerFactory emf;
-    private EntityManager em;
-    private DBCommandTransactionalExecutor dbCommandExecutor;
     private AuthorRepository authorRepository;
 
     @Before
     public void initTestCase() {
-        emf = Persistence.createEntityManagerFactory("libraryPU");
-        em = emf.createEntityManager();
-
+        initializeTestDB();
         authorRepository = new AuthorRepository();
         authorRepository.em = em;
-
-        dbCommandExecutor = new DBCommandTransactionalExecutor(em);
     }
 
     @After
-    public void closeEntityManager() {
-        em.close();
-        emf.close();
+    public void setDownTestCase() {
+        closeEntityManager();
     }
 
     @Test
@@ -82,6 +73,52 @@ public class AuthorRepositoryUTest {
 
         assertThat(authorRepository.existsById(authorAddedId), is(equalTo(true)));
         assertThat(authorRepository.existsById(999l), is(equalTo(false)));
+    }
+
+    @Test
+    public void findByFilterNoFilter() {
+        loadDataForFindByFilter();
+
+        final PaginatedData<Author> result = authorRepository.findByFilter(new AuthorFilter());
+        assertThat(result.getNumberOfRows(), is(equalTo(4)));
+        assertThat(result.getRows().size(), is(equalTo(4)));
+        assertThat(result.getRow(0).getName(), is(equalTo(erichGamma().getName())));
+        assertThat(result.getRow(1).getName(), is(equalTo(jamesGosling().getName())));
+        assertThat(result.getRow(2).getName(), is(equalTo(martinFowler().getName())));
+        assertThat(result.getRow(3).getName(), is(equalTo(robertMartin().getName())));
+    }
+
+    @Test
+    public void findByFilterFilteringByNameAndPaginatingAndOrderingDescending() {
+        loadDataForFindByFilter();
+
+        final AuthorFilter authorFilter = new AuthorFilter();
+        authorFilter.setName("o");
+        authorFilter.setPaginationData(new PaginationData(0, 2, "name", PaginationData.OrderMode.DESCENDING));
+
+        PaginatedData<Author> result = authorRepository.findByFilter(authorFilter);
+        assertThat(result.getNumberOfRows(), is(equalTo(3)));
+        assertThat(result.getRows().size(), is(equalTo(2)));
+        assertThat(result.getRow(0).getName(), is(equalTo(robertMartin().getName())));
+        assertThat(result.getRow(1).getName(), is(equalTo(martinFowler().getName())));
+
+        authorFilter.setPaginationData(new PaginationData(2, 2, "name", PaginationData.OrderMode.DESCENDING));
+        result = authorRepository.findByFilter(authorFilter);
+
+        assertThat(result.getNumberOfRows(), is(equalTo(3)));
+        assertThat(result.getRows().size(), is(equalTo(1)));
+        assertThat(result.getRow(0).getName(), is(equalTo(jamesGosling().getName())));
+
+    }
+
+    private void loadDataForFindByFilter() {
+        dbCommandExecutor.execute(() -> {
+            authorRepository.add(robertMartin());
+            authorRepository.add(jamesGosling());
+            authorRepository.add(martinFowler());
+            authorRepository.add(erichGamma());
+            return null;
+        });
     }
 
 }

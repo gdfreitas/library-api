@@ -11,22 +11,15 @@ import org.junit.Test;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.library.app.commontests.category.CategoryForTestsRepository.categoryWithId;
-import static com.library.app.commontests.category.CategoryForTestsRepository.java;
-import static com.library.app.commontests.category.CategoryForTestsRepository.networks;
+import static com.library.app.commontests.category.CategoryForTestsRepository.*;
 import static junit.framework.TestCase.fail;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author gabriel.freitas

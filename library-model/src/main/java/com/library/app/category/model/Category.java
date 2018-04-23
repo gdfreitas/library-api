@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author gabriel.freitas
  */
 @Entity
-@Table(name = "category")
+@Table(name = "lib_category")
 public class Category implements Serializable {
 
     @Id

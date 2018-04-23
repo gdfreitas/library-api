@@ -37,29 +37,29 @@ e todas as pequenas peças que por final acabam dando vida ao projeto.
 
 ## Configurações
 
-```standalone-full.xml```
+`$JBOSS_HOME/bin/standalone.bat -c=standalone-full.xml`
 
 ### Datasource
 
 ```xml
 <datasource jndi-name="java:jboss/datasources/library" pool-name="library-pool" enabled="true" use-java-context="true">
-   <connection-url>jdbc:postgresql://localhost/library</connection-url>
-   <driver>postgres</driver>
-   <transaction-isolation>TRANSACTION_READ_COMMITED</transaction-isolation>
-   <pool>
-      <min-pool-size>5</min-pool-size>
-      <max-pool-size>30</max-pool-size>
-      <prefill>true</prefill>
-      <use-strict-min>false</use-strict-min>
-      <flush-strategy>FailingConnectionOnly</flush-strategy>
-   </pool>
-   <security>
-      <user-name>postgres</user-name>
-      <password>postgres</password>
-   </security>
-   <statement>
-      <prepared-statement-cache-size>32</prepared-statement-cache-size>
-   </statement>
+	<connection-url>jdbc:postgresql://localhost/library</connection-url>
+	<driver>postgres</driver>
+	<transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+	<pool>
+		<min-pool-size>5</min-pool-size>
+		<max-pool-size>30</max-pool-size>
+		<prefill>true</prefill>
+		<use-strict-min>false</use-strict-min>
+		<flush-strategy>FailingConnectionOnly</flush-strategy>
+	</pool>
+	<security>
+		<user-name>postgres</user-name>
+		<password>postgres</password>
+	</security>
+	<statement>
+		<prepared-statement-cache-size>32</prepared-statement-cache-size>
+	</statement>
 </datasource>
 ```
 
@@ -69,4 +69,20 @@ e todas as pequenas peças que por final acabam dando vida ao projeto.
 <driver name="postgres" module="org.postgres">
    <xa-datasource-class>org.postgresql.Driver</xa-datasource-class>
 </driver>
+```
+
+### PostgreSQL JDBC Driver
+
+Em `$JBOSS_HOME\modules\system\layers\base\org\postgres\main`
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+	<module xmlns="urn:jboss:module:1.1" name="org.postgres">
+	<resources>
+		<resource-root path="postgresql-42.2.2.jar"/>
+	</resources>
+	<dependencies>
+		<module name="javax.api"/>
+	</dependencies>
+</module>
 ```

@@ -35,4 +35,38 @@ organização responsável pelo projeto, as licenças, a URL do repositório ond
 e todas as pequenas peças que por final acabam dando vida ao projeto.
 
 
+## Configurações
 
+```standalone-full.xml```
+
+### Datasource
+
+```xml
+<datasource jndi-name="java:jboss/datasources/library" pool-name="library-pool" enabled="true" use-java-context="true">
+   <connection-url>jdbc:postgresql://localhost/library</connection-url>
+   <driver>postgres</driver>
+   <transaction-isolation>TRANSACTION_READ_COMMITED</transaction-isolation>
+   <pool>
+      <min-pool-size>5</min-pool-size>
+      <max-pool-size>30</max-pool-size>
+      <prefill>true</prefill>
+      <use-strict-min>false</use-strict-min>
+      <flush-strategy>FailingConnectionOnly</flush-strategy>
+   </pool>
+   <security>
+      <user-name>postgres</user-name>
+      <password>postgres</password>
+   </security>
+   <statement>
+      <prepared-statement-cache-size>32</prepared-statement-cache-size>
+   </statement>
+</datasource>
+```
+
+### Drivers
+
+```xml
+<driver name="postgres" module="org.postgres">
+   <xa-datasource-class>org.postgresql.Driver</xa-datasource-class>
+</driver>
+```

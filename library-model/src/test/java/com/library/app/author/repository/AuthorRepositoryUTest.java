@@ -9,8 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
-
 import static com.library.app.commontests.author.AuthorForTestsRepository.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -74,7 +72,7 @@ public class AuthorRepositoryUTest extends TestBaseRepository {
         final Long authorAddedId = dbCommandExecutor.execute(() -> authorRepository.add(robertMartin()).getId());
 
         assertThat(authorRepository.existsById(authorAddedId), is(equalTo(true)));
-        assertThat(authorRepository.existsById(999l), is(equalTo(false)));
+        assertThat(authorRepository.existsById(999L), is(equalTo(false)));
     }
 
     @Test

@@ -1,0 +1,23 @@
+{
+    "paging": {
+        "totalRecords": 4
+    },
+    "entries": [
+        {
+            "id": 2,
+            "name": "Erich Gamma"
+        },
+        {
+            "id": 3,
+            "name": "James Gosling"
+        },
+        {
+            "id": 4,
+            "name": "Martin Fowler"
+        },
+        {
+            "id": 1,
+            "name": "Robert Martin"
+        }
+    ]
+}

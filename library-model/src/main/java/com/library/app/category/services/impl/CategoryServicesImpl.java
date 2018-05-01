@@ -5,18 +5,12 @@ import com.library.app.category.exception.CategoryNotFoundException;
 import com.library.app.category.model.Category;
 import com.library.app.category.repository.CategoryRepository;
 import com.library.app.category.services.CategoryServices;
-import com.library.app.common.exception.FieldNotValidException;
 import com.library.app.common.utils.ValidationUtils;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
-import static java.util.Objects.isNull;
 
 /**
  * @author gabriel.freitas
@@ -25,50 +19,49 @@ import static java.util.Objects.isNull;
 public class CategoryServicesImpl implements CategoryServices {
 
     @Inject
-    protected CategoryRepository repository;
+    Validator validator;
 
     @Inject
-    protected Validator validator;
+    CategoryRepository categoryRepository;
 
     @Override
-    public Category add(final Category category) throws FieldNotValidException {
-        validate(category);
+    public Category add(final Category category) {
+        validateCategory(category);
 
-        return repository.add(category);
+        return categoryRepository.add(category);
     }
 
     @Override
     public void update(final Category category) {
-        validate(category);
+        validateCategory(category);
 
-        if (!repository.existsById(category.getId())) {
+        if (!categoryRepository.existsById(category.getId())) {
             throw new CategoryNotFoundException();
         }
 
-        repository.update(category);
+        categoryRepository.update(category);
     }
 
     @Override
     public Category findById(final Long id) throws CategoryNotFoundException {
-        Category category = repository.findById(id);
-
-        if (isNull(category)) {
+        final Category category = categoryRepository.findById(id);
+        if (category == null) {
             throw new CategoryNotFoundException();
         }
-
         return category;
     }
 
     @Override
     public List<Category> findAll() {
-        return repository.findAll("name");
+        return categoryRepository.findAll("name");
     }
 
-    private void validate(final Category category) {
+    private void validateCategory(final Category category) {
         ValidationUtils.validateEntityFields(validator, category);
 
-        if (repository.alreadyExists(category)) {
+        if (categoryRepository.alreadyExists(category)) {
             throw new CategoryExistentException();
         }
     }
+
 }

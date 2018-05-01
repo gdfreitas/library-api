@@ -39,7 +39,7 @@ public class CategoryServicesUTest {
         categoryServices = new CategoryServicesImpl();
 
         ((CategoryServicesImpl) categoryServices).validator = validator;
-        ((CategoryServicesImpl) categoryServices).repository = categoryRepository;
+        ((CategoryServicesImpl) categoryServices).categoryRepository = categoryRepository;
     }
 
     @Test

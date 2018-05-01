@@ -55,4 +55,5 @@ public class AuthorServicesImpl implements AuthorServices {
     public PaginatedData<Author> findByFilter(final AuthorFilter authorFilter) {
         return authorRepository.findByFilter(authorFilter);
     }
+
 }

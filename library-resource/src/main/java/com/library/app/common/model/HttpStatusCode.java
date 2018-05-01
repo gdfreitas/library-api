@@ -10,14 +10,14 @@ public enum HttpStatusCode {
     OK(200),
     NOT_FOUND(404);
 
-    private int statusCode;
+    private int code;
 
-    private HttpStatusCode(final int statusCode) {
-        this.statusCode = statusCode;
+    private HttpStatusCode(final int code) {
+        this.code = code;
     }
 
     public int getStatusCode() {
-        return statusCode;
+        return code;
     }
 
 }

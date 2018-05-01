@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * @author gabriel.freitas
@@ -25,7 +24,7 @@ public class Category implements Serializable {
     public Category() {
     }
 
-    public Category(String name) {
+    public Category(final String name) {
         this.name = name;
     }
 
@@ -33,7 +32,7 @@ public class Category implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -41,26 +40,43 @@ public class Category implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Category category = (Category) o;
-        return Objects.equals(id, category.id) &&
-                Objects.equals(name, category.name);
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
+    public boolean equals(final Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final Category other = (Category) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-        return "Category { id=" + id + ", name='" + name + '\'' + '}';
+        return "Category [id=" + id + ", name=" + name + "]";
     }
 }

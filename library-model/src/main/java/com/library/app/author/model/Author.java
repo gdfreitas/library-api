@@ -16,7 +16,7 @@ public class Author implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "may not be null")
     @Size(min = 2, max = 40)
     private String name;
 

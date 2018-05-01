@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 /**
  * @author gabriel.freitas
  */
-public class JsonWriter {
+public final class JsonWriter {
 
     private JsonWriter() {
     }
@@ -17,6 +17,5 @@ public class JsonWriter {
 
         return new Gson().toJson(object);
     }
-
 
 }

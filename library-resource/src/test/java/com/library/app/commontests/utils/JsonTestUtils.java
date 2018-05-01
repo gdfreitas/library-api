@@ -15,7 +15,6 @@ import java.util.Scanner;
  */
 @Ignore
 public class JsonTestUtils {
-
     public static final String BASE_JSON_DIR = "json/";
 
     private JsonTestUtils() {

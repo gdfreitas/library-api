@@ -1,27 +1,44 @@
 package com.library.app.user.resource;
 
+import static com.library.app.common.model.StandardsOperationResults.*;
+
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.library.app.common.exception.FieldNotValidException;
 import com.library.app.common.json.JsonReader;
 import com.library.app.common.json.JsonUtils;
+import com.library.app.common.json.JsonWriter;
 import com.library.app.common.json.OperationResultJsonWriter;
 import com.library.app.common.model.HttpCode;
 import com.library.app.common.model.OperationResult;
+import com.library.app.common.model.PaginatedData;
 import com.library.app.common.model.ResourceMessage;
 import com.library.app.user.exception.UserExistentException;
 import com.library.app.user.exception.UserNotFoundException;
+import com.library.app.user.model.Customer;
 import com.library.app.user.model.User;
 import com.library.app.user.model.User.Roles;
 import com.library.app.user.model.User.UserType;
+import com.library.app.user.model.filter.UserFilter;
 import com.library.app.user.services.UserServices;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-
-import static com.library.app.common.model.StandardsOperationResults.*;
 
 /**
  * @author gabriel.freitas
@@ -30,6 +47,8 @@ import static com.library.app.common.model.StandardsOperationResults.*;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final ResourceMessage RESOURCE_MESSAGE = new ResourceMessage("user");
 
@@ -44,8 +63,6 @@ public class UserResource {
 
     @Context
     UriInfo uriInfo;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @POST
     public Response add(final String body) {
@@ -137,6 +154,59 @@ public class UserResource {
         return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
     }
 
+    @GET
+    @Path("/{id}")
+    public Response findById(@PathParam("id") final Long id) {
+        logger.debug("Find user by id: {}", id);
+        ResponseBuilder responseBuilder;
+        try {
+            final User user = userServices.findById(id);
+            final OperationResult result = OperationResult.success(userJsonConverter.convertToJsonElement(user));
+            responseBuilder = Response.status(HttpCode.OK.getCode()).entity(OperationResultJsonWriter.toJson(result));
+            logger.debug("User found by id: {}", user);
+        } catch (final UserNotFoundException e) {
+            logger.error("No user found for id", id);
+            responseBuilder = Response.status(HttpCode.NOT_FOUND.getCode());
+        }
+
+        return responseBuilder.build();
+    }
+
+    @POST
+    @Path("/authenticate")
+    public Response findByEmailAndPassword(final String body) {
+        logger.debug("Find user by email and password");
+        ResponseBuilder responseBuilder;
+        try {
+            final User userWithEmailAndPassword = getUserWithEmailAndPasswordFromJson(body);
+            final User user = userServices.findByEmailAndPassword(userWithEmailAndPassword.getEmail(),
+                    userWithEmailAndPassword.getPassword());
+            final OperationResult result = OperationResult.success(userJsonConverter.convertToJsonElement(user));
+            responseBuilder = Response.status(HttpCode.OK.getCode()).entity(OperationResultJsonWriter.toJson(result));
+            logger.debug("User found by email/password: {}", user);
+        } catch (final UserNotFoundException e) {
+            logger.error("No user found for email/password");
+            responseBuilder = Response.status(HttpCode.NOT_FOUND.getCode());
+        }
+
+        return responseBuilder.build();
+    }
+
+    @GET
+    public Response findByFilter() {
+        final UserFilter userFilter = new UserFilterExtractorFromUrl(uriInfo).getFilter();
+        logger.debug("Finding users using filter: {}", userFilter);
+
+        final PaginatedData<User> users = userServices.findByFilter(userFilter);
+
+        logger.debug("Found {} users", users.getNumberOfRows());
+
+        final JsonElement jsonWithPagingAndEntries = JsonUtils.getJsonElementWithPagingAndEntries(users,
+                userJsonConverter);
+        return Response.status(HttpCode.OK.getCode()).entity(JsonWriter.writeToString(jsonWithPagingAndEntries))
+                .build();
+    }
+
     private boolean isLoggedUser(final Long id) {
         try {
             final User loggerUser = userServices.findByEmail(securityContext.getUserPrincipal().getName());
@@ -146,6 +216,16 @@ public class UserResource {
         } catch (final UserNotFoundException e) {
         }
         return false;
+    }
+
+    private User getUserWithEmailAndPasswordFromJson(final String body) {
+        final User user = new Customer(); // The implementation does not matter
+
+        final JsonObject jsonObject = JsonReader.readAsJsonObject(body);
+        user.setEmail(JsonReader.getStringOrNull(jsonObject, "email"));
+        user.setPassword(JsonReader.getStringOrNull(jsonObject, "password"));
+
+        return user;
     }
 
     private String getPasswordFromJson(final String body) {

@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.library.app.category.model.Category;
 import com.library.app.common.json.JsonReader;
-import com.library.app.common.model.HttpStatusCode;
+import com.library.app.common.model.HttpCode;
 import com.library.app.commontests.utils.ArquillianTestUtils;
 import com.library.app.commontests.utils.IntTestUtils;
 import com.library.app.commontests.utils.ResourceClient;
@@ -13,16 +13,12 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.net.URL;
 
 import static com.library.app.commontests.category.CategoryForTestsRepository.*;
@@ -71,7 +67,7 @@ public class CategoryResourceIntTest {
                 .resourcePath(PATH_RESOURCE)
                 .postWithFile(getPathFileRequest(PATH_RESOURCE, "categoryWithNullName.json"));
 
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.UNPROCESSABLE_ENTITY.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "categoryErrorNullName.json");
     }
 
@@ -86,7 +82,7 @@ public class CategoryResourceIntTest {
                 .resourcePath(PATH_RESOURCE)
                 .postWithFile(getPathFileRequest(PATH_RESOURCE, "category.json"));
 
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.UNPROCESSABLE_ENTITY.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "categoryAlreadyExists.json");
     }
 
@@ -99,7 +95,7 @@ public class CategoryResourceIntTest {
         final Response response = resourceClient.resourcePath(PATH_RESOURCE + "/" + id)
                 .putWithFile(getPathFileRequest(PATH_RESOURCE, "categoryCleanCode.json"));
 
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
 
         findCategoryAndAssertResponseWithCategory(id, cleanCode());
     }
@@ -114,7 +110,7 @@ public class CategoryResourceIntTest {
                 .resourcePath(PATH_RESOURCE + "/" + javaCategoryId)
                 .putWithFile(getPathFileRequest(PATH_RESOURCE, "categoryCleanCode.json"));
 
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.UNPROCESSABLE_ENTITY.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "categoryAlreadyExists.json");
     }
 
@@ -125,14 +121,14 @@ public class CategoryResourceIntTest {
                 .resourcePath(PATH_RESOURCE + "/999")
                 .putWithFile(getPathFileRequest(PATH_RESOURCE, "category.json"));
 
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.NOT_FOUND.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
     }
 
     @Test
     @RunAsClient
     public void findCategoryNotFound() {
         final Response response = resourceClient.resourcePath(PATH_RESOURCE + "/999").get();
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.NOT_FOUND.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
     }
 
     @Test
@@ -144,7 +140,7 @@ public class CategoryResourceIntTest {
                 .resourcePath(PATH_RESOURCE)
                 .get();
 
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertResponseContainsTheCategories(response, 4, architecture(), cleanCode(), java(), networks());
     }
 

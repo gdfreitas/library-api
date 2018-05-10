@@ -1,0 +1,4 @@
+{
+    "errorIdentification": "user.invalidField.name",
+    "errorDescription": "may not be null"
+}

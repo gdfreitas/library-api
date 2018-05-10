@@ -9,7 +9,7 @@ import com.library.app.common.exception.FieldNotValidException;
 import com.library.app.common.json.JsonUtils;
 import com.library.app.common.json.JsonWriter;
 import com.library.app.common.json.OperationResultJsonWriter;
-import com.library.app.common.model.HttpStatusCode;
+import com.library.app.common.model.HttpCode;
 import com.library.app.common.model.OperationResult;
 import com.library.app.common.model.PaginatedData;
 import com.library.app.common.model.ResourceMessage;
@@ -53,19 +53,19 @@ public class AuthorResource {
         logger.debug("Adding a new author with body {}", body);
         Author author = authorJsonConverter.convertFrom(body);
 
-        HttpStatusCode httpCode = HttpStatusCode.CREATED;
+        HttpCode httpCode = HttpCode.CREATED;
         OperationResult result;
         try {
             author = authorServices.add(author);
             result = OperationResult.success(JsonUtils.getJsonElementWithId(author.getId()));
         } catch (final FieldNotValidException e) {
-            httpCode = HttpStatusCode.UNPROCESSABLE_ENTITY;
+            httpCode = HttpCode.VALIDATION_ERROR;
             logger.error("One of the fields of the author is not valid", e);
             result = getOperationResultInvalidField(RESOURCE_MESSAGE, e);
         }
 
         logger.debug("Returning the operation result after adding author: {}", result);
-        return Response.status(httpCode.getStatusCode()).entity(OperationResultJsonWriter.toJson(result)).build();
+        return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
     }
 
     @PUT
@@ -75,23 +75,23 @@ public class AuthorResource {
         final Author author = authorJsonConverter.convertFrom(body);
         author.setId(id);
 
-        HttpStatusCode httpCode = HttpStatusCode.OK;
+        HttpCode httpCode = HttpCode.OK;
         OperationResult result;
         try {
             authorServices.update(author);
             result = OperationResult.success();
         } catch (final FieldNotValidException e) {
-            httpCode = HttpStatusCode.UNPROCESSABLE_ENTITY;
+            httpCode = HttpCode.VALIDATION_ERROR;
             logger.error("One of the fields of the author is not valid", e);
             result = getOperationResultInvalidField(RESOURCE_MESSAGE, e);
         } catch (final AuthorNotFoundException e) {
-            httpCode = HttpStatusCode.NOT_FOUND;
+            httpCode = HttpCode.NOT_FOUND;
             logger.error("No author found for the given id", e);
             result = getOperationResultNotFound(RESOURCE_MESSAGE);
         }
 
         logger.debug("Returning the operation result after updating author: {}", result);
-        return Response.status(httpCode.getStatusCode()).entity(OperationResultJsonWriter.toJson(result)).build();
+        return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
     }
 
     @GET
@@ -102,11 +102,11 @@ public class AuthorResource {
         try {
             final Author author = authorServices.findById(id);
             final OperationResult result = OperationResult.success(authorJsonConverter.convertToJsonElement(author));
-            responseBuilder = Response.status(HttpStatusCode.OK.getStatusCode()).entity(OperationResultJsonWriter.toJson(result));
+            responseBuilder = Response.status(HttpCode.OK.getCode()).entity(OperationResultJsonWriter.toJson(result));
             logger.debug("Author found: {}", author);
         } catch (final AuthorNotFoundException e) {
             logger.error("No author found for id", id);
-            responseBuilder = Response.status(HttpStatusCode.NOT_FOUND.getStatusCode());
+            responseBuilder = Response.status(HttpCode.NOT_FOUND.getCode());
         }
 
         return responseBuilder.build();
@@ -124,7 +124,7 @@ public class AuthorResource {
         final JsonElement jsonWithPagingAndEntries = JsonUtils.getJsonElementWithPagingAndEntries(authors,
                 authorJsonConverter);
 
-        return Response.status(HttpStatusCode.OK.getStatusCode()).entity(JsonWriter.writeToString(jsonWithPagingAndEntries))
+        return Response.status(HttpCode.OK.getCode()).entity(JsonWriter.writeToString(jsonWithPagingAndEntries))
                 .build();
     }
 

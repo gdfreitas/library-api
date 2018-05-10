@@ -9,7 +9,7 @@ import com.library.app.common.exception.FieldNotValidException;
 import com.library.app.common.json.JsonUtils;
 import com.library.app.common.json.JsonWriter;
 import com.library.app.common.json.OperationResultJsonWriter;
-import com.library.app.common.model.HttpStatusCode;
+import com.library.app.common.model.HttpCode;
 import com.library.app.common.model.OperationResult;
 import com.library.app.common.model.PaginatedData;
 import com.library.app.common.model.ResourceMessage;
@@ -47,23 +47,23 @@ public class CategoryResource {
         logger.debug("Adding a new category with body {}", body);
         Category category = categoryJsonConverter.convertFrom(body);
 
-        HttpStatusCode httpCode = HttpStatusCode.CREATED;
+        HttpCode httpCode = HttpCode.CREATED;
         OperationResult result;
         try {
             category = categoryServices.add(category);
             result = OperationResult.success(JsonUtils.getJsonElementWithId(category.getId()));
         } catch (final FieldNotValidException e) {
             logger.error("One of the fields of the category is not valid", e);
-            httpCode = HttpStatusCode.UNPROCESSABLE_ENTITY;
+            httpCode = HttpCode.VALIDATION_ERROR;
             result = getOperationResultInvalidField(RESOURCE_MESSAGE, e);
         } catch (final CategoryExistentException e) {
             logger.error("There's already a category for the given name", e);
-            httpCode = HttpStatusCode.UNPROCESSABLE_ENTITY;
+            httpCode = HttpCode.VALIDATION_ERROR;
             result = getOperationResultExistent(RESOURCE_MESSAGE, "name");
         }
 
         logger.debug("Returning the operation result after adding category: {}", result);
-        return Response.status(httpCode.getStatusCode()).entity(OperationResultJsonWriter.toJson(result)).build();
+        return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
     }
 
     @PUT
@@ -73,27 +73,27 @@ public class CategoryResource {
         final Category category = categoryJsonConverter.convertFrom(body);
         category.setId(id);
 
-        HttpStatusCode httpCode = HttpStatusCode.OK;
+        HttpCode httpCode = HttpCode.OK;
         OperationResult result;
         try {
             categoryServices.update(category);
             result = OperationResult.success();
         } catch (final FieldNotValidException e) {
             logger.error("One of the field of the category is not valid", e);
-            httpCode = HttpStatusCode.UNPROCESSABLE_ENTITY;
+            httpCode = HttpCode.VALIDATION_ERROR;
             result = getOperationResultInvalidField(RESOURCE_MESSAGE, e);
         } catch (final CategoryExistentException e) {
             logger.error("There is already a category for the given name", e);
-            httpCode = HttpStatusCode.UNPROCESSABLE_ENTITY;
+            httpCode = HttpCode.VALIDATION_ERROR;
             result = getOperationResultExistent(RESOURCE_MESSAGE, "name");
         } catch (final CategoryNotFoundException e) {
             logger.error("No category found for the given id", e);
-            httpCode = HttpStatusCode.NOT_FOUND;
+            httpCode = HttpCode.NOT_FOUND;
             result = getOperationResultNotFound(RESOURCE_MESSAGE);
         }
 
         logger.debug("Returning the operation result after updating category: {}", result);
-        return Response.status(httpCode.getStatusCode()).entity(OperationResultJsonWriter.toJson(result)).build();
+        return Response.status(httpCode.getCode()).entity(OperationResultJsonWriter.toJson(result)).build();
     }
 
     @GET
@@ -105,11 +105,11 @@ public class CategoryResource {
             final Category category = categoryServices.findById(id);
             final OperationResult result = OperationResult
                     .success(categoryJsonConverter.convertToJsonElement(category));
-            responseBuilder = Response.status(HttpStatusCode.OK.getStatusCode()).entity(OperationResultJsonWriter.toJson(result));
+            responseBuilder = Response.status(HttpCode.OK.getCode()).entity(OperationResultJsonWriter.toJson(result));
             logger.debug("Category found: {}", category);
         } catch (final CategoryNotFoundException e) {
             logger.error("No category found for id", id);
-            responseBuilder = Response.status(HttpStatusCode.NOT_FOUND.getStatusCode());
+            responseBuilder = Response.status(HttpCode.NOT_FOUND.getCode());
         }
 
         return responseBuilder.build();
@@ -127,7 +127,7 @@ public class CategoryResource {
                 new PaginatedData<Category>(categories.size(), categories), categoryJsonConverter
         );
 
-        return Response.status(HttpStatusCode.OK.getStatusCode()).entity(JsonWriter.writeToString(jsonWithPagingAndEntries))
+        return Response.status(HttpCode.OK.getCode()).entity(JsonWriter.writeToString(jsonWithPagingAndEntries))
                 .build();
     }
 

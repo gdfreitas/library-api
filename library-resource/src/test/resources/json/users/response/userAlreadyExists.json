@@ -1,0 +1,4 @@
+{
+    "errorIdentification": "user.existent",
+    "errorDescription": "There is already a user for the given email"
+}

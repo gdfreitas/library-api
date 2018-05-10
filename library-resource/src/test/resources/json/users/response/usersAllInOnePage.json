@@ -1,0 +1,38 @@
+{
+    "paging": {
+        "totalRecords": 3
+    },
+    "entries": [
+        {
+            "id": 1,
+            "name": "Admin",
+            "email": "admin@domain.com",
+            "type": "EMPLOYEE",
+            "roles": [
+                "EMPLOYEE",
+                "ADMINISTRATOR"
+            ],
+            "createdAt": "2015-01-03T22:35:42Z"
+        },
+        {
+            "id": 2,
+            "name": "John doe",
+            "email": "john@domain.com",
+            "type": "CUSTOMER",
+            "roles": [
+                "CUSTOMER"
+            ],
+            "createdAt": "2015-01-03T22:35:42Z"
+        },
+        {
+            "id": 3,
+            "name": "Mary",
+            "email": "mary@domain.com",
+            "type": "CUSTOMER",
+            "roles": [
+                "CUSTOMER"
+            ],
+            "createdAt": "2015-01-03T22:35:42Z"
+        }
+    ]
+}

@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.library.app.author.model.Author;
 import com.library.app.common.json.JsonReader;
-import com.library.app.common.model.HttpStatusCode;
+import com.library.app.common.model.HttpCode;
 import com.library.app.commontests.utils.ArquillianTestUtils;
 import com.library.app.commontests.utils.IntTestUtils;
 import com.library.app.commontests.utils.ResourceClient;
@@ -65,7 +65,7 @@ public class AuthorResourceIntTest {
         final Response response = resourceClient.resourcePath(PATH_RESOURCE).postWithFile(
                 getPathFileRequest(PATH_RESOURCE, "authorWithNullName.json"));
 
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.UNPROCESSABLE_ENTITY.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "authorErrorNullName.json");
     }
 
@@ -77,7 +77,7 @@ public class AuthorResourceIntTest {
 
         final Response responseUpdate = resourceClient.resourcePath(PATH_RESOURCE + "/" + authorId).putWithFile(
                 getPathFileRequest(PATH_RESOURCE, "uncleBob.json"));
-        assertThat(responseUpdate.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(responseUpdate.getStatus(), is(equalTo(HttpCode.OK.getCode())));
 
         final Author uncleBob = new Author();
         uncleBob.setName("Uncle Bob");
@@ -89,14 +89,14 @@ public class AuthorResourceIntTest {
     public void updateAuthorNotFound() {
         final Response response = resourceClient.resourcePath(PATH_RESOURCE + "/" + 999).putWithFile(
                 getPathFileRequest(PATH_RESOURCE, "robertMartin.json"));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.NOT_FOUND.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
     }
 
     @Test
     @RunAsClient
     public void findAuthorNotFound() {
         final Response response = resourceClient.resourcePath(PATH_RESOURCE + "/" + 999).get();
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.NOT_FOUND.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
     }
 
     @Test
@@ -106,13 +106,13 @@ public class AuthorResourceIntTest {
 
         // first page
         Response response = resourceClient.resourcePath(PATH_RESOURCE + "?page=0&per_page=10&sort=-name").get();
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertResponseContainsTheAuthors(response, 12, williamOpdyke(), robertMartin(), richardHelm(), ralphJohnson(),
                 martinFowler(), kentBeck(), joshuaBloch(), johnVlissides(), johnBrant(), jamesGosling());
 
         // second page
         response = resourceClient.resourcePath(PATH_RESOURCE + "?page=1&per_page=10&sort=-name").get();
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertResponseContainsTheAuthors(response, 12, erichGamma(), donRoberts());
     }
 

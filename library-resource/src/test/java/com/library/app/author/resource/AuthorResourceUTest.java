@@ -5,7 +5,7 @@ import com.library.app.author.model.Author;
 import com.library.app.author.model.filter.AuthorFilter;
 import com.library.app.author.services.AuthorServices;
 import com.library.app.common.exception.FieldNotValidException;
-import com.library.app.common.model.HttpStatusCode;
+import com.library.app.common.model.HttpCode;
 import com.library.app.common.model.PaginatedData;
 import com.library.app.commontests.utils.ResourceDefinitions;
 import org.junit.Before;
@@ -60,7 +60,7 @@ public class AuthorResourceUTest {
 
         final Response response = authorResource
                 .add(readJsonFile(getPathFileRequest(PATH_RESOURCE, "robertMartin.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.CREATED.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.CREATED.getCode())));
         assertJsonMatchesExpectedJson(response.getEntity().toString(), "{\"id\": 1}");
     }
 
@@ -70,7 +70,7 @@ public class AuthorResourceUTest {
 
         final Response response = authorResource
                 .add(readJsonFile(getPathFileRequest(PATH_RESOURCE, "authorWithNullName.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.UNPROCESSABLE_ENTITY.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "authorErrorNullName.json");
     }
 
@@ -78,7 +78,7 @@ public class AuthorResourceUTest {
     public void updateValidAuthor() throws Exception {
         final Response response = authorResource.update(1L,
                 readJsonFile(getPathFileRequest(PATH_RESOURCE, "robertMartin.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertThat(response.getEntity().toString(), is(equalTo("")));
 
         verify(authorServices).update(authorWithId(robertMartin(), 1L));
@@ -91,7 +91,7 @@ public class AuthorResourceUTest {
 
         final Response response = authorResource.update(1L,
                 readJsonFile(getPathFileRequest(PATH_RESOURCE, "authorWithNullName.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.UNPROCESSABLE_ENTITY.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "authorErrorNullName.json");
     }
 
@@ -101,7 +101,7 @@ public class AuthorResourceUTest {
 
         final Response response = authorResource.update(2L,
                 readJsonFile(getPathFileRequest(PATH_RESOURCE, "robertMartin.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.NOT_FOUND.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class AuthorResourceUTest {
         when(authorServices.findById(1L)).thenReturn(authorWithId(robertMartin(), 1L));
 
         final Response response = authorResource.findById(1L);
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertJsonResponseWithFile(response, "robertMartinFound.json");
     }
 
@@ -118,7 +118,7 @@ public class AuthorResourceUTest {
         when(authorServices.findById(1L)).thenThrow(new AuthorNotFoundException());
 
         final Response response = authorResource.findById(1L);
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.NOT_FOUND.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
     }
 
     @SuppressWarnings("unchecked")
@@ -134,7 +134,7 @@ public class AuthorResourceUTest {
                 new PaginatedData<Author>(authors.size(), authors));
 
         final Response response = authorResource.findByFilter();
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertJsonResponseWithFile(response, "authorsAllInOnePage.json");
     }
 

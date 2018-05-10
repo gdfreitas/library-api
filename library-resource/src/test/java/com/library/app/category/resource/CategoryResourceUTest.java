@@ -5,7 +5,7 @@ import com.library.app.category.exception.CategoryNotFoundException;
 import com.library.app.category.model.Category;
 import com.library.app.category.services.CategoryServices;
 import com.library.app.common.exception.FieldNotValidException;
-import com.library.app.common.model.HttpStatusCode;
+import com.library.app.common.model.HttpCode;
 import com.library.app.commontests.utils.ResourceDefinitions;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class CategoryResourceUTest {
 
         final Response response = categoryResource.add(readJsonFile(getPathFileRequest(PATH_RESOURCE,
                 "newCategory.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.CREATED.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.CREATED.getCode())));
         assertJsonMatchesExpectedJson(response.getEntity().toString(), "{\"id\": 1}");
     }
 
@@ -62,7 +62,7 @@ public class CategoryResourceUTest {
 
         final Response response = categoryResource.add(readJsonFile(getPathFileRequest(PATH_RESOURCE,
                 "newCategory.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.UNPROCESSABLE_ENTITY.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "categoryAlreadyExists.json");
     }
 
@@ -72,7 +72,7 @@ public class CategoryResourceUTest {
 
         final Response response = categoryResource.add(readJsonFile(getPathFileRequest(PATH_RESOURCE,
                 "categoryWithNullName.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.UNPROCESSABLE_ENTITY.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "categoryErrorNullName.json");
     }
 
@@ -80,7 +80,7 @@ public class CategoryResourceUTest {
     public void updateValidCategory() {
         final Response response = categoryResource.update(1L,
                 readJsonFile(getPathFileRequest(PATH_RESOURCE, "category.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertThat(response.getEntity().toString(), is(equalTo("")));
 
         verify(categoryServices).update(categoryWithId(java(), 1L));
@@ -92,7 +92,7 @@ public class CategoryResourceUTest {
 
         final Response response = categoryResource.update(1L,
                 readJsonFile(getPathFileRequest(PATH_RESOURCE, "category.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.UNPROCESSABLE_ENTITY.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "categoryAlreadyExists.json");
     }
 
@@ -103,7 +103,7 @@ public class CategoryResourceUTest {
 
         final Response response = categoryResource.update(1L,
                 readJsonFile(getPathFileRequest(PATH_RESOURCE, "categoryWithNullName.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.UNPROCESSABLE_ENTITY.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "categoryErrorNullName.json");
     }
 
@@ -113,7 +113,7 @@ public class CategoryResourceUTest {
 
         final Response response = categoryResource.update(2L,
                 readJsonFile(getPathFileRequest(PATH_RESOURCE, "category.json")));
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.NOT_FOUND.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
         assertJsonResponseWithFile(response, "categoryNotFound.json");
     }
 
@@ -122,7 +122,7 @@ public class CategoryResourceUTest {
         when(categoryServices.findById(1L)).thenReturn(categoryWithId(java(), 1L));
 
         final Response response = categoryResource.findById(1L);
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertJsonResponseWithFile(response, "categoryFound.json");
     }
 
@@ -131,7 +131,7 @@ public class CategoryResourceUTest {
         when(categoryServices.findById(1L)).thenThrow(new CategoryNotFoundException());
 
         final Response response = categoryResource.findById(1L);
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.NOT_FOUND.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
     }
 
     @Test
@@ -139,7 +139,7 @@ public class CategoryResourceUTest {
         when(categoryServices.findAll()).thenReturn(new ArrayList<>());
 
         final Response response = categoryResource.findAll();
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertJsonResponseWithFile(response, "emptyListOfCategories.json");
     }
 
@@ -149,7 +149,7 @@ public class CategoryResourceUTest {
                 Arrays.asList(categoryWithId(java(), 1L), categoryWithId(networks(), 2L)));
 
         final Response response = categoryResource.findAll();
-        assertThat(response.getStatus(), is(equalTo(HttpStatusCode.OK.getStatusCode())));
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertJsonResponseWithFile(response, "twoCategories.json");
     }
 

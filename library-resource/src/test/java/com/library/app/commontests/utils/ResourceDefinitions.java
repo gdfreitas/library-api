@@ -9,7 +9,8 @@ import org.junit.Ignore;
 public enum ResourceDefinitions {
 
     CATEGORY("categories"),
-    AUTHOR("authors");
+    AUTHOR("authors"),
+    USER("users");
 
     private String resourceName;
 

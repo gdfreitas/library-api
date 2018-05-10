@@ -1,5 +1,7 @@
 package com.library.app.commontests.user;
 
+import com.library.app.common.utils.DateUtils;
+import com.library.app.common.utils.PasswordUtils;
 import com.library.app.user.model.Customer;
 import com.library.app.user.model.Employee;
 import com.library.app.user.model.User;
@@ -47,4 +49,15 @@ public class UserForTestsRepository {
         return Arrays.asList(admin(), johnDoe(), mary());
     }
 
+    public static User userWithIdAndCreatedAt(final User user, final Long id) {
+        user.setId(id);
+        user.setCreatedAt(DateUtils.getAsDateTime("2015-01-03T22:35:42Z"));
+
+        return user;
+    }
+
+    public static User userWithEncryptedPassword(final User user) {
+        user.setPassword(PasswordUtils.encryptPassword(user.getPassword()));
+        return user;
+    }
 }

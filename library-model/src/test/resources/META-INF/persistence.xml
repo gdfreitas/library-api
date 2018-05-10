@@ -7,6 +7,9 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.library.app.category.model.Category</class>
         <class>com.library.app.author.model.Author</class>
+        <class>com.library.app.user.model.User</class>
+        <class>com.library.app.user.model.Customer</class>
+        <class>com.library.app.user.model.Employee</class>
 
         <properties>
             <property name="hibernate.show_sql" value="true" />

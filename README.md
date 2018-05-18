@@ -87,3 +87,20 @@ Em `$JBOSS_HOME\modules\system\layers\base\org\postgres\main`
 	</dependencies>
 </module>
 ```
+
+### Filtro Autenticação
+```xml
+<security-domain name="library" cache-type="default">
+    <authentication>
+        <login-module code="Database" flag="required">
+            <module-option name="dsJndiName" value="java:jboss/datasources/library"/>
+            <module-option name="principalsQuery" value="select password from lib_user where email=?"/>
+            <module-option name="rolesQuery" value="select role, 'Roles' from lib_user_role ur inner join lib_user u on u.id = ur.user_id where u.email=?"/>
+            <module-option name="hashAlgorithm" value="SHA-256"/>
+            <module-option name="hashEncoding" value="BASE64"/>
+            <module-option name="hashStorePassword" value="false"/>
+            <module-option name="hashUserPassword" value="true"/>
+        </login-module>
+    </authentication>
+</security-domain>
+```

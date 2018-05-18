@@ -1,25 +1,5 @@
 package com.library.app.user.resource;
 
-import static com.library.app.common.model.StandardsOperationResults.*;
-
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.library.app.common.exception.FieldNotValidException;
@@ -39,6 +19,17 @@ import com.library.app.user.model.User.Roles;
 import com.library.app.user.model.User.UserType;
 import com.library.app.user.model.filter.UserFilter;
 import com.library.app.user.services.UserServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response.ResponseBuilder;
+
+import static com.library.app.common.model.StandardsOperationResults.*;
 
 /**
  * @author gabriel.freitas
@@ -47,8 +38,6 @@ import com.library.app.user.services.UserServices;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final ResourceMessage RESOURCE_MESSAGE = new ResourceMessage("user");
 
@@ -63,6 +52,8 @@ public class UserResource {
 
     @Context
     UriInfo uriInfo;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @POST
     public Response add(final String body) {
@@ -93,6 +84,7 @@ public class UserResource {
 
     @PUT
     @Path("/{id}")
+    @PermitAll
     public Response update(@PathParam("id") final Long id, final String body) {
         logger.debug("Updating the user {} with body {}", id, body);
 
@@ -130,6 +122,7 @@ public class UserResource {
 
     @PUT
     @Path("/{id}/password")
+    @PermitAll
     public Response updatePassword(@PathParam("id") final Long id, final String body) {
         logger.debug("Updating the password for user {}", id);
 
@@ -156,6 +149,7 @@ public class UserResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({"ADMINISTRATOR"})
     public Response findById(@PathParam("id") final Long id) {
         logger.debug("Find user by id: {}", id);
         ResponseBuilder responseBuilder;
@@ -174,6 +168,7 @@ public class UserResource {
 
     @POST
     @Path("/authenticate")
+    @PermitAll
     public Response findByEmailAndPassword(final String body) {
         logger.debug("Find user by email and password");
         ResponseBuilder responseBuilder;
@@ -193,6 +188,7 @@ public class UserResource {
     }
 
     @GET
+    @RolesAllowed({"ADMINISTRATOR"})
     public Response findByFilter() {
         final UserFilter userFilter = new UserFilterExtractorFromUrl(uriInfo).getFilter();
         logger.debug("Finding users using filter: {}", userFilter);

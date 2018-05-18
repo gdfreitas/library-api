@@ -1,5 +1,7 @@
 package com.library.app.commontests.utils;
 
+import com.library.app.user.model.User;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -18,6 +20,7 @@ public class ResourceClient {
 
     private URL urlBase;
     private String resourcePath;
+    private User user;
 
     public ResourceClient(final URL urlBase) {
         this.urlBase = urlBase;
@@ -25,6 +28,11 @@ public class ResourceClient {
 
     public ResourceClient resourcePath(final String resourcePath) {
         this.resourcePath = resourcePath;
+        return this;
+    }
+
+    public ResourceClient user(final User user) {
+        this.user = user;
         return this;
     }
 
@@ -53,7 +61,10 @@ public class ResourceClient {
     }
 
     private Builder buildClient() {
-        final Client resourceClient = ClientBuilder.newClient();
+        Client resourceClient = ClientBuilder.newClient();
+        if (user != null) {
+            resourceClient = resourceClient.register(new HttpBasicAuthenticator(user.getEmail(), user.getPassword()));
+        }
         return resourceClient.target(getFullURL(resourcePath)).request();
     }
 

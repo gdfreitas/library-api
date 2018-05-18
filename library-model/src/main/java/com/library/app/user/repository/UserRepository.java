@@ -35,7 +35,6 @@ public class UserRepository extends GenericRepository<User> {
         return alreadyExists("email", user.getEmail(), user.getId());
     }
 
-    @SuppressWarnings("all")
     public User findByEmail(final String email) {
         try {
             return (User) em.createQuery("Select e From User e where e.email = :email")
@@ -48,19 +47,16 @@ public class UserRepository extends GenericRepository<User> {
 
     public PaginatedData<User> findByFilter(final UserFilter userFilter) {
         final StringBuilder clause = new StringBuilder("WHERE e.id is not null");
-
         final Map<String, Object> queryParameters = new HashMap<>();
-
         if (userFilter.getName() != null) {
             clause.append(" And Upper(e.name) Like Upper(:name)");
             queryParameters.put("name", "%" + userFilter.getName() + "%");
         }
-
         if (userFilter.getUserType() != null) {
             clause.append(" And e.userType = :userType");
             queryParameters.put("userType", userFilter.getUserType());
         }
-
         return findByParameters(clause.toString(), userFilter.getPaginationData(), queryParameters, "name ASC");
     }
+
 }

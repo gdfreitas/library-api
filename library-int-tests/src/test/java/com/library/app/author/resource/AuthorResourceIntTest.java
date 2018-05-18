@@ -22,6 +22,8 @@ import javax.ws.rs.core.Response;
 import java.net.URL;
 
 import static com.library.app.commontests.author.AuthorForTestsRepository.*;
+import static com.library.app.commontests.user.UserForTestsRepository.admin;
+import static com.library.app.commontests.user.UserForTestsRepository.johnDoe;
 import static com.library.app.commontests.utils.FileTestNameUtils.getPathFileRequest;
 import static com.library.app.commontests.utils.FileTestNameUtils.getPathFileResponse;
 import static com.library.app.commontests.utils.JsonTestUtils.assertJsonMatchesFileContent;
@@ -50,6 +52,8 @@ public class AuthorResourceIntTest {
         this.resourceClient = new ResourceClient(url);
 
         resourceClient.resourcePath("/DB").delete();
+        resourceClient.resourcePath("DB/" + ResourceDefinitions.USER.getResourceName()).postWithContent("");
+        resourceClient.user(admin());
     }
 
     @Test
@@ -116,6 +120,27 @@ public class AuthorResourceIntTest {
         assertResponseContainsTheAuthors(response, 12, erichGamma(), donRoberts());
     }
 
+    @Test
+    @RunAsClient
+    public void findByFilterWithNoUser() {
+        final Response response = resourceClient.user(null).resourcePath(PATH_RESOURCE).get();
+        assertThat(response.getStatus(), is(equalTo(HttpCode.UNAUTHORIZED.getCode())));
+    }
+
+    @Test
+    @RunAsClient
+    public void findByFilterWithUserCustomer() {
+        final Response response = resourceClient.user(johnDoe()).resourcePath(PATH_RESOURCE).get();
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
+    }
+
+    @Test
+    @RunAsClient
+    public void findByIdIdWithUserCustomer() {
+        final Response response = resourceClient.user(johnDoe()).resourcePath(PATH_RESOURCE + "/999").get();
+        assertThat(response.getStatus(), is(equalTo(HttpCode.FORBIDDEN.getCode())));
+    }
+
     private Long addAuthorAndGetId(final String fileName) {
         return IntTestUtils.addElementWithFileAndGetId(resourceClient, PATH_RESOURCE, PATH_RESOURCE, fileName);
     }
@@ -131,8 +156,8 @@ public class AuthorResourceIntTest {
         assertJsonMatchesFileContent(response.readEntity(String.class), getPathFileResponse(PATH_RESOURCE, fileName));
     }
 
-    private void assertResponseContainsTheAuthors(final Response response, final int expectedTotalRecords, final Author... expectedAuthors) {
-
+    private void assertResponseContainsTheAuthors(final Response response, final int expectedTotalRecords,
+                                                  final Author... expectedAuthors) {
         final JsonArray authorsList = IntTestUtils.assertJsonHasTheNumberOfElementsAndReturnTheEntries(response,
                 expectedTotalRecords, expectedAuthors.length);
 

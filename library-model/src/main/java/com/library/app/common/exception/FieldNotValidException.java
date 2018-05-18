@@ -5,7 +5,6 @@ import javax.ejb.ApplicationException;
 /**
  * @author gabriel.freitas
  */
-
 @ApplicationException
 public class FieldNotValidException extends RuntimeException {
 

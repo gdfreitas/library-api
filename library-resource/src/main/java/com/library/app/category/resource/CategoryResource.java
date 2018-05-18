@@ -16,6 +16,8 @@ import com.library.app.common.model.ResourceMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -30,16 +32,14 @@ import static com.library.app.common.model.StandardsOperationResults.*;
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed({"EMPLOYEE"})
 public class CategoryResource {
 
     private static final ResourceMessage RESOURCE_MESSAGE = new ResourceMessage("category");
-
     @Inject
     CategoryServices categoryServices;
-
     @Inject
     CategoryJsonConverter categoryJsonConverter;
-
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @POST
@@ -116,6 +116,7 @@ public class CategoryResource {
     }
 
     @GET
+    @PermitAll
     public Response findAll() {
         logger.debug("Find all categories");
 
@@ -124,8 +125,7 @@ public class CategoryResource {
         logger.debug("Found {} categories", categories.size());
 
         final JsonElement jsonWithPagingAndEntries = JsonUtils.getJsonElementWithPagingAndEntries(
-                new PaginatedData<Category>(categories.size(), categories), categoryJsonConverter
-        );
+                new PaginatedData<Category>(categories.size(), categories), categoryJsonConverter);
 
         return Response.status(HttpCode.OK.getCode()).entity(JsonWriter.writeToString(jsonWithPagingAndEntries))
                 .build();

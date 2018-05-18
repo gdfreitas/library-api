@@ -9,4 +9,47 @@
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
+    <context-param>
+        <param-name>resteasy.role.based.security</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <security-constraint>
+        <display-name>API New User</display-name>
+        <web-resource-collection>
+            <web-resource-name>API New User</web-resource-name>
+            <url-pattern>/api/users/*</url-pattern>
+            <http-method>POST</http-method>
+        </web-resource-collection>
+    </security-constraint>
+
+    <security-constraint>
+        <display-name>API Area</display-name>
+        <web-resource-collection>
+            <web-resource-name>API Area</web-resource-name>
+            <url-pattern>/api/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>PUT</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>*</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+    </login-config>
+
+    <security-role>
+        <role-name>EMPLOYEE</role-name>
+    </security-role>
+    <security-role>
+        <role-name>ADMINISTRATOR</role-name>
+    </security-role>
+    <security-role>
+        <role-name>CUSTOMER</role-name>
+    </security-role>
+
 </web-app>

@@ -1,9 +1,5 @@
 package com.library.app.user.services.impl;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.validation.Validator;
-
 import com.library.app.common.exception.FieldNotValidException;
 import com.library.app.common.model.PaginatedData;
 import com.library.app.common.utils.PasswordUtils;
@@ -14,6 +10,10 @@ import com.library.app.user.model.User;
 import com.library.app.user.model.filter.UserFilter;
 import com.library.app.user.repository.UserRepository;
 import com.library.app.user.services.UserServices;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.validation.Validator;
 
 /**
  * @author gabriel.freitas

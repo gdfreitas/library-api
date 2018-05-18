@@ -1,22 +1,5 @@
 package com.library.app.user.services.impl;
 
-import static com.library.app.commontests.user.UserArgumentMatcher.*;
-import static com.library.app.commontests.user.UserForTestsRepository.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
-import java.util.Arrays;
-
-import javax.validation.Validation;
-import javax.validation.Validator;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import com.library.app.common.exception.FieldNotValidException;
 import com.library.app.common.model.PaginatedData;
 import com.library.app.common.utils.PasswordUtils;
@@ -26,6 +9,23 @@ import com.library.app.user.model.User;
 import com.library.app.user.model.filter.UserFilter;
 import com.library.app.user.repository.UserRepository;
 import com.library.app.user.services.UserServices;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.util.Arrays;
+
+import static com.library.app.commontests.user.UserArgumentMatcher.userEq;
+import static com.library.app.commontests.user.UserForTestsRepository.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author gabriel.freitas

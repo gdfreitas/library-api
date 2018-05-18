@@ -10,6 +10,7 @@ public class ResourceMessage {
     private static final String MESSAGE_INVALID_FIELD = "%s.invalidField.%s";
     private static final String KEY_NOT_FOUND = "%s.NotFound";
     private static final String MESSAGE_NOT_FOUND = "%s not found";
+
     private final String resource;
 
     public ResourceMessage(final String resource) {

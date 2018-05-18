@@ -1,13 +1,13 @@
 package com.library.app.user.services;
 
-import javax.ejb.Local;
-
 import com.library.app.common.exception.FieldNotValidException;
 import com.library.app.common.model.PaginatedData;
 import com.library.app.user.exception.UserExistentException;
 import com.library.app.user.exception.UserNotFoundException;
 import com.library.app.user.model.User;
 import com.library.app.user.model.filter.UserFilter;
+
+import javax.ejb.Local;
 
 
 /**

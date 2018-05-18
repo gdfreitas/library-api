@@ -94,4 +94,5 @@ public class UserFilterExtractorFromUrlUTest {
         assertThat(userFilter.getName(), is(equalTo(name)));
         assertThat(userFilter.getUserType(), is(equalTo(userType)));
     }
+
 }

@@ -37,23 +37,21 @@ public abstract class GenericRepository<T> {
 
     @SuppressWarnings("unchecked")
     public List<T> findAll(final String orderField) {
-        return getEntityManager()
-                .createQuery("Select e From " + getPersistentClass().getSimpleName() + " e Order by e." + orderField)
+        return getEntityManager().createQuery(
+                "Select e From " + getPersistentClass().getSimpleName() + " e Order by e." + orderField)
                 .getResultList();
     }
 
     public boolean alreadyExists(final String propertyName, final String propertyValue, final Long id) {
         final StringBuilder jpql = new StringBuilder();
-
-        jpql.append("Select 1 From " + getPersistentClass().getSimpleName() + " e where e." + propertyName + " = :propertyValue");
-
+        jpql.append("Select 1 From " + getPersistentClass().getSimpleName() + " e where e." + propertyName
+                + " = :propertyValue");
         if (id != null) {
             jpql.append(" and e.id != :id");
         }
 
         final Query query = getEntityManager().createQuery(jpql.toString());
         query.setParameter("propertyValue", propertyValue);
-
         if (id != null) {
             query.setParameter("id", id);
         }
@@ -69,15 +67,13 @@ public abstract class GenericRepository<T> {
                 .getResultList().size() > 0;
     }
 
-    protected PaginatedData<T> findByParameters(final String clause,
-                                                final PaginationData paginationData,
-                                                final Map<String, Object> queryParameters,
-                                                final String defaultSortFieldWithDirection) {
-
+    @SuppressWarnings("unchecked")
+    protected PaginatedData<T> findByParameters(final String clause, final PaginationData paginationData,
+                                                final Map<String, Object> queryParameters, final String defaultSortFieldWithDirection) {
         final String clauseSort = "Order by e." + getSortField(paginationData, defaultSortFieldWithDirection);
-
-        final Query queryEntities = getEntityManager().createQuery("Select e From " + getPersistentClass().getSimpleName() + " e " + clause + " " + clauseSort);
-
+        final Query queryEntities = getEntityManager().createQuery(
+                "Select e From " + getPersistentClass().getSimpleName()
+                        + " e " + clause + " " + clauseSort);
         applyQueryParametersOnQuery(queryParameters, queryEntities);
         applyPaginationOnQuery(paginationData, queryEntities);
 
@@ -87,11 +83,9 @@ public abstract class GenericRepository<T> {
     }
 
     private int countWithFilter(final String clause, final Map<String, Object> queryParameters) {
-        final Query queryCount = getEntityManager()
-                .createQuery("Select count(e) From " + getPersistentClass().getSimpleName() + " e " + clause);
-
+        final Query queryCount = getEntityManager().createQuery(
+                "Select count(e) From " + getPersistentClass().getSimpleName() + " e " + clause);
         applyQueryParametersOnQuery(queryParameters, queryCount);
-
         return ((Long) queryCount.getSingleResult()).intValue();
     }
 
@@ -106,7 +100,6 @@ public abstract class GenericRepository<T> {
         if (paginationData == null || paginationData.getOrderField() == null) {
             return defaultSortField;
         }
-
         return paginationData.getOrderField() + " " + getSortDirection(paginationData);
     }
 

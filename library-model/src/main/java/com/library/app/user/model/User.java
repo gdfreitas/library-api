@@ -25,22 +25,21 @@ public abstract class User implements Serializable {
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
-    @NotNull
+    @NotNull(message = "may not be null")
     @Size(min = 3, max = 40)
     private String name;
 
     @Email
-    @NotNull
+    @NotNull(message = "may not be null")
     @Column(unique = true)
     @Size(max = 70)
     private String email;
 
-    @NotNull
+    @NotNull(message = "may not be null")
     private String password;
-    @CollectionTable(
-            name = "lib_user_role", joinColumns = @JoinColumn(name = "user_id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role"})
-    )
+
+    @CollectionTable(name = "lib_user_role", joinColumns = @JoinColumn(name = "user_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role"}))
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
@@ -157,4 +156,5 @@ public abstract class User implements Serializable {
     public enum UserType {
         CUSTOMER, EMPLOYEE
     }
+
 }

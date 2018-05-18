@@ -22,6 +22,8 @@ import javax.ws.rs.core.Response;
 import java.net.URL;
 
 import static com.library.app.commontests.category.CategoryForTestsRepository.*;
+import static com.library.app.commontests.user.UserForTestsRepository.admin;
+import static com.library.app.commontests.user.UserForTestsRepository.johnDoe;
 import static com.library.app.commontests.utils.FileTestNameUtils.getPathFileRequest;
 import static com.library.app.commontests.utils.FileTestNameUtils.getPathFileResponse;
 import static com.library.app.commontests.utils.JsonTestUtils.assertJsonMatchesFileContent;
@@ -36,10 +38,8 @@ import static org.junit.Assert.assertThat;
 public class CategoryResourceIntTest {
 
     private static final String PATH_RESOURCE = ResourceDefinitions.CATEGORY.getResourceName();
-
     @ArquillianResource
     private URL url;
-
     private ResourceClient resourceClient;
 
     @Deployment
@@ -50,7 +50,10 @@ public class CategoryResourceIntTest {
     @Before
     public void initTestCase() {
         this.resourceClient = new ResourceClient(url);
+
         resourceClient.resourcePath("/DB").delete();
+        resourceClient.resourcePath("DB/" + ResourceDefinitions.USER.getResourceName()).postWithContent("");
+        resourceClient.user(admin());
     }
 
     @Test
@@ -63,9 +66,8 @@ public class CategoryResourceIntTest {
     @Test
     @RunAsClient
     public void addCategoryWithNullName() {
-        final Response response = resourceClient
-                .resourcePath(PATH_RESOURCE)
-                .postWithFile(getPathFileRequest(PATH_RESOURCE, "categoryWithNullName.json"));
+        final Response response = resourceClient.resourcePath(PATH_RESOURCE).postWithFile(
+                getPathFileRequest(PATH_RESOURCE, "categoryWithNullName.json"));
 
         assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "categoryErrorNullName.json");
@@ -74,14 +76,10 @@ public class CategoryResourceIntTest {
     @Test
     @RunAsClient
     public void addExistentCategory() {
-        resourceClient
-                .resourcePath(PATH_RESOURCE)
-                .postWithFile(getPathFileRequest(PATH_RESOURCE, "category.json"));
+        resourceClient.resourcePath(PATH_RESOURCE).postWithFile(getPathFileRequest(PATH_RESOURCE, "category.json"));
 
-        final Response response = resourceClient
-                .resourcePath(PATH_RESOURCE)
-                .postWithFile(getPathFileRequest(PATH_RESOURCE, "category.json"));
-
+        final Response response = resourceClient.resourcePath(PATH_RESOURCE).postWithFile(
+                getPathFileRequest(PATH_RESOURCE, "category.json"));
         assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "categoryAlreadyExists.json");
     }
@@ -92,9 +90,8 @@ public class CategoryResourceIntTest {
         final Long id = addCategoryAndGetId("category.json");
         findCategoryAndAssertResponseWithCategory(id, java());
 
-        final Response response = resourceClient.resourcePath(PATH_RESOURCE + "/" + id)
-                .putWithFile(getPathFileRequest(PATH_RESOURCE, "categoryCleanCode.json"));
-
+        final Response response = resourceClient.resourcePath(PATH_RESOURCE + "/" + id).putWithFile(
+                getPathFileRequest(PATH_RESOURCE, "categoryCleanCode.json"));
         assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
 
         findCategoryAndAssertResponseWithCategory(id, cleanCode());
@@ -106,10 +103,8 @@ public class CategoryResourceIntTest {
         final Long javaCategoryId = addCategoryAndGetId("category.json");
         addCategoryAndGetId("categoryCleanCode.json");
 
-        final Response response = resourceClient
-                .resourcePath(PATH_RESOURCE + "/" + javaCategoryId)
-                .putWithFile(getPathFileRequest(PATH_RESOURCE, "categoryCleanCode.json"));
-
+        final Response response = resourceClient.resourcePath(PATH_RESOURCE + "/" + javaCategoryId).putWithFile(
+                getPathFileRequest(PATH_RESOURCE, "categoryCleanCode.json"));
         assertThat(response.getStatus(), is(equalTo(HttpCode.VALIDATION_ERROR.getCode())));
         assertJsonResponseWithFile(response, "categoryAlreadyExists.json");
     }
@@ -117,10 +112,8 @@ public class CategoryResourceIntTest {
     @Test
     @RunAsClient
     public void updateCategoryNotFound() {
-        final Response response = resourceClient
-                .resourcePath(PATH_RESOURCE + "/999")
-                .putWithFile(getPathFileRequest(PATH_RESOURCE, "category.json"));
-
+        final Response response = resourceClient.resourcePath(PATH_RESOURCE + "/999").putWithFile(
+                getPathFileRequest(PATH_RESOURCE, "category.json"));
         assertThat(response.getStatus(), is(equalTo(HttpCode.NOT_FOUND.getCode())));
     }
 
@@ -136,25 +129,36 @@ public class CategoryResourceIntTest {
     public void findAllCategories() {
         resourceClient.resourcePath("DB/" + PATH_RESOURCE).postWithContent("");
 
-        final Response response = resourceClient
-                .resourcePath(PATH_RESOURCE)
-                .get();
-
+        final Response response = resourceClient.resourcePath(PATH_RESOURCE).get();
         assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
         assertResponseContainsTheCategories(response, 4, architecture(), cleanCode(), java(), networks());
     }
 
-    private void assertResponseContainsTheCategories(final Response response,
-                                                     final int expectedTotalRecords,
+    @Test
+    @RunAsClient
+    public void findAllCategoriesWithNoUser() {
+        final Response response = resourceClient.user(null).resourcePath(PATH_RESOURCE).get();
+        assertThat(response.getStatus(), is(equalTo(HttpCode.UNAUTHORIZED.getCode())));
+    }
+
+    @Test
+    @RunAsClient
+    public void findAllCategoriesWithUserCustomer() {
+        final Response response = resourceClient.user(johnDoe()).resourcePath(PATH_RESOURCE).get();
+        assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
+    }
+
+    @Test
+    @RunAsClient
+    public void findCategoryByIdWithUserCustomer() {
+        final Response response = resourceClient.user(johnDoe()).resourcePath(PATH_RESOURCE + "/999").get();
+        assertThat(response.getStatus(), is(equalTo(HttpCode.FORBIDDEN.getCode())));
+    }
+
+    private void assertResponseContainsTheCategories(final Response response, final int expectedTotalRecords,
                                                      final Category... expectedCategories) {
-
-        final JsonObject result = JsonReader.readAsJsonObject(response.readEntity(String.class));
-
-        final int totalRecords = result.getAsJsonObject("paging").get("totalRecords").getAsInt();
-        assertThat(totalRecords, is(equalTo(expectedTotalRecords)));
-
-        final JsonArray categoriesList = result.getAsJsonArray("entries");
-        assertThat(categoriesList.size(), is(equalTo(expectedCategories.length)));
+        final JsonArray categoriesList = IntTestUtils.assertJsonHasTheNumberOfElementsAndReturnTheEntries(response,
+                expectedTotalRecords, expectedCategories.length);
 
         for (int i = 0; i < expectedCategories.length; i++) {
             final Category expectedCategory = expectedCategories[i];
@@ -172,10 +176,11 @@ public class CategoryResourceIntTest {
         assertJsonMatchesFileContent(response.readEntity(String.class), getPathFileResponse(PATH_RESOURCE, fileName));
     }
 
-    private void findCategoryAndAssertResponseWithCategory(final Long categoryIdToBeFound, final Category expectedCategory) {
+    private void findCategoryAndAssertResponseWithCategory(final Long categoryIdToBeFound,
+                                                           final Category expectedCategory) {
         final String json = IntTestUtils.findById(resourceClient, PATH_RESOURCE, categoryIdToBeFound);
-        final JsonObject categoryAsJson = JsonReader.readAsJsonObject(json);
 
+        final JsonObject categoryAsJson = JsonReader.readAsJsonObject(json);
         assertThat(JsonReader.getStringOrNull(categoryAsJson, "name"), is(equalTo(expectedCategory.getName())));
     }
 

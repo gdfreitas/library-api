@@ -182,4 +182,5 @@ public class UserRepositoryUTest extends TestBaseRepository {
         assertThat(actualUser.getPassword(), is(expectedUser.getPassword()));
         assertThat(actualUser.getUserType(), is(equalTo(expectedUserType)));
     }
+
 }

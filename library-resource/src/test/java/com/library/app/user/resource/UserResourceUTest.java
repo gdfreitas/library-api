@@ -1,29 +1,5 @@
 package com.library.app.user.resource;
 
-import static com.library.app.commontests.user.UserArgumentMatcher.*;
-import static com.library.app.commontests.user.UserForTestsRepository.*;
-import static com.library.app.commontests.user.UserTestUtils.*;
-import static com.library.app.commontests.utils.FileTestNameUtils.*;
-import static com.library.app.commontests.utils.JsonTestUtils.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import com.library.app.common.exception.FieldNotValidException;
 import com.library.app.common.model.HttpCode;
 import com.library.app.common.model.PaginatedData;
@@ -34,12 +10,38 @@ import com.library.app.user.model.User;
 import com.library.app.user.model.User.Roles;
 import com.library.app.user.model.filter.UserFilter;
 import com.library.app.user.services.UserServices;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.library.app.commontests.user.UserArgumentMatcher.userEq;
+import static com.library.app.commontests.user.UserForTestsRepository.*;
+import static com.library.app.commontests.user.UserTestUtils.getJsonWithEmailAndPassword;
+import static com.library.app.commontests.user.UserTestUtils.getJsonWithPassword;
+import static com.library.app.commontests.utils.FileTestNameUtils.getPathFileRequest;
+import static com.library.app.commontests.utils.FileTestNameUtils.getPathFileResponse;
+import static com.library.app.commontests.utils.JsonTestUtils.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.*;
 
 /**
  * @author gabriel.freitas
  */
 public class UserResourceUTest {
 
+    private static final String PATH_RESOURCE = ResourceDefinitions.USER.getResourceName();
     private UserResource userResource;
 
     @Mock
@@ -50,8 +52,6 @@ public class UserResourceUTest {
 
     @Mock
     private SecurityContext securityContext;
-
-    private static final String PATH_RESOURCE = ResourceDefinitions.USER.getResourceName();
 
     @Before
     public void initTestCase() {

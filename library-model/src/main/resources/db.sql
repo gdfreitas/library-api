@@ -28,3 +28,20 @@ create table lib_user_role (
 insert into lib_user (created_at, name, email, password, type) values(current_timestamp, 'Admin', 'adm@domain.com', 'jZae727K08KaOmKSgOaGzww/XVqGr/PKEgIMkjrcbJI=', 'EMPLOYEE');
 insert into lib_user_role (user_id, role) values((select id from lib_user where email = 'adm@domain.com'), 'EMPLOYEE');
 insert into lib_user_role (user_id, role) values((select id from lib_user where email = 'adm@domain.com'), 'ADMINISTRATOR');
+
+create table lib_book (
+	id bigserial not null primary key,
+	title varchar(150) not null,
+	description text not null,
+	category_id	bigint not null,
+	price decimal(5,2) not null,
+	constraint fk_book_category foreign key(category_id) references lib_category(id)
+);
+
+create table lib_book_author (
+	book_id bigint not null,
+	author_id bigint not null,
+	primary key (book_id, author_id),
+	constraint fk_book_author_book foreign key(book_id) references lib_book(id),
+	constraint fk_book_author_author foreign key(author_id) references lib_author(id)
+);

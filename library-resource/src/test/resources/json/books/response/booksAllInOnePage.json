@@ -1,0 +1,51 @@
+{
+    "paging": {
+        "totalRecords": 2
+    },
+    "entries": [
+        {
+            "id": 1,
+            "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+            "description": "Even bad code can function. But if code isn't clean, ...",
+            "category": {
+                "id": 1,
+                "name": "Clean Code"
+            },
+            "authors": [
+                {
+                    "id": 1,
+                    "name": "Robert Martin"
+                }
+            ],
+            "price": 35.06
+        },
+        {
+            "id": 2,
+            "title": "Design Patterns: Elements of Reusable Object-Oriented Software",
+            "description": "Design Patterns is a modern classic in the literature of object-oriented development",
+            "category": {
+                "id": 2,
+                "name": "Architecture"
+            },
+            "authors": [
+                {
+                    "id": 2,
+                    "name": "Erich Gamma"
+                },
+                {
+                    "id": 3,
+                    "name": "John Vlissides"
+                },
+                {
+                    "id": 4,
+                    "name": "Ralph Johnson"
+                },
+                {
+                    "id": 5,
+                    "name": "Richard Helm"
+                }
+            ],
+            "price": 48.94
+        }
+    ]
+}

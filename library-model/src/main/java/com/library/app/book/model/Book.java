@@ -21,11 +21,11 @@ public class Book implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "may not be null")
     @Size(min = 10, max = 150)
     private String title;
 
-    @NotNull
+    @NotNull(message = "may not be null")
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -36,16 +36,16 @@ public class Book implements Serializable {
             uniqueConstraints = @UniqueConstraint(columnNames = {"book_id", "author_id"}))
     @JoinColumn(name = "author_id")
     @OrderBy(value = "name")
-    @NotNull
+    @NotNull(message = "may not be null")
     @Size(min = 1)
     private List<Author> authors;
 
     @Lob
-    @NotNull
+    @NotNull(message = "may not be null")
     @Size(min = 10)
     private String description;
 
-    @NotNull
+    @NotNull(message = "may not be null")
     private Double price;
 
     public Long getId() {

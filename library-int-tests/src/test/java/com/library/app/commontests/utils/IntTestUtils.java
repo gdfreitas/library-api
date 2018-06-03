@@ -25,6 +25,12 @@ public class IntTestUtils {
         return assertResponseIsCreatedAndGetId(response);
     }
 
+    public static Long addElementWithContentAndGetId(final ResourceClient resourceClient, final String pathResource,
+                                                     final String content) {
+        final Response response = resourceClient.resourcePath(pathResource).postWithContent(content);
+        return assertResponseIsCreatedAndGetId(response);
+    }
+
     public static String findById(final ResourceClient resourceClient, final String pathResource, final Long id) {
         final Response response = resourceClient.resourcePath(pathResource + "/" + id).get();
         assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
@@ -39,9 +45,7 @@ public class IntTestUtils {
     }
 
     public static JsonArray assertJsonHasTheNumberOfElementsAndReturnTheEntries(final Response response,
-                                                                                final int expectedTotalRecords,
-                                                                                final int expectedEntriesForThisPage) {
-
+                                                                                final int expectedTotalRecords, final int expectedEntriesForThisPage) {
         final JsonObject result = JsonReader.readAsJsonObject(response.readEntity(String.class));
 
         final int totalRecords = result.getAsJsonObject("paging").get("totalRecords").getAsInt();

@@ -1,6 +1,7 @@
 package com.library.app.commontests.utils;
 
 import com.library.app.author.model.Author;
+import com.library.app.book.model.Book;
 import com.library.app.category.model.Category;
 import com.library.app.user.model.User;
 import org.junit.Ignore;
@@ -18,7 +19,7 @@ import java.util.List;
 @Stateless
 public class TestRepositoryEJB {
 
-    private static final List<Class<?>> ENTITIES_TO_REMOVE = Arrays.asList(User.class, Category.class, Author.class);
+    private static final List<Class<?>> ENTITIES_TO_REMOVE = Arrays.asList(Book.class, User.class, Category.class, Author.class);
 
     @PersistenceContext
     private EntityManager em;

@@ -10,6 +10,7 @@
         <class>com.library.app.user.model.User</class>
         <class>com.library.app.user.model.Customer</class>
         <class>com.library.app.user.model.Employee</class>
+        <class>com.library.app.book.model.Book</class>
 
         <properties>
             <property name="hibernate.show_sql" value="true" />

@@ -32,6 +32,19 @@ public class OrderRepository extends GenericRepository<Order> {
         return em;
     }
 
+    @Override
+    public Order findById(final Long id) {
+        Order order = super.findById(id);
+
+        // FIXME: inicializa as collections LAZY
+        if (order != null) {
+            order.getItems().size();
+            order.getHistoryEntries().size();
+        }
+
+        return order;
+    }
+
     public PaginatedData<Order> findByFilter(final OrderFilter orderFilter) {
         final StringBuilder clause = new StringBuilder("Where e.id is not null");
         final Map<String, Object> queryParameters = new HashMap<>();

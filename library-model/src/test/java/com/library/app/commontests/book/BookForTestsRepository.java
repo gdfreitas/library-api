@@ -13,6 +13,7 @@ import java.util.List;
 import static com.library.app.commontests.author.AuthorForTestsRepository.*;
 import static com.library.app.commontests.category.CategoryForTestsRepository.architecture;
 import static com.library.app.commontests.category.CategoryForTestsRepository.java;
+import static com.library.app.commontests.utils.TestRepositoryUtils.findByPropertyNameAndValue;
 
 
 /**
@@ -106,16 +107,6 @@ public class BookForTestsRepository {
         }
 
         return book;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> T findByPropertyNameAndValue(final EntityManager em, final Class<T> clazz,
-                                                    final String propertyName, final String propertyValue) {
-        return (T) em
-                .createQuery("Select o From " + clazz.getSimpleName() +
-                        " o Where o." + propertyName + " = :propertyValue")
-                .setParameter("propertyValue", propertyValue)
-                .getSingleResult();
     }
 
 }

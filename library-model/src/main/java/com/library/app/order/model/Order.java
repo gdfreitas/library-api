@@ -47,7 +47,7 @@ public class Order implements Serializable {
     @NotNull
     private Customer customer;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "lib_order_item", joinColumns = @JoinColumn(name = "order_id"))
     @NotNull
     @Size(min = 1)
@@ -57,7 +57,7 @@ public class Order implements Serializable {
     @NotNull
     private Double total;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "lib_order_history", joinColumns = @JoinColumn(name = "order_id"))
     @NotNull
     @Size(min = 1)

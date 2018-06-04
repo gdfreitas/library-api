@@ -2,6 +2,7 @@ package com.library.app.commontests.order;
 
 import static com.library.app.commontests.book.BookForTestsRepository.*;
 import static com.library.app.commontests.user.UserForTestsRepository.*;
+import static com.library.app.commontests.utils.TestRepositoryUtils.findByPropertyNameAndValue;
 
 import javax.persistence.EntityManager;
 
@@ -33,8 +34,7 @@ public final class OrderForTestsRepository {
         order.setInitialStatus();
         order.calculateTotal();
 
-        // necessário para diferenciar o timestamp entre duas criações ao mesmo tempo sendo adicionadas à um Set
-        // o comparator utiliza o timestamp de criação
+        // FIXME: necessário para diferenciar o timestamp entre duas criações ao mesmo tempo sendo adicionadas à um Set o comparator utiliza o timestamp de criação
         try {
             Thread.sleep(1);
         } catch (final InterruptedException e) {
@@ -75,16 +75,6 @@ public final class OrderForTestsRepository {
             item.setBook(findByPropertyNameAndValue(em, Book.class, "title", item.getBook().getTitle()));
         }
         return order;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> T findByPropertyNameAndValue(final EntityManager em, final Class<T> clazz,
-                                                    final String propertyName, final String propertyValue) {
-        return (T) em
-                .createQuery("Select o From " + clazz.getSimpleName() +
-                        " o Where o." + propertyName + " = :propertyValue")
-                .setParameter("propertyValue", propertyValue)
-                .getSingleResult();
     }
 
 }

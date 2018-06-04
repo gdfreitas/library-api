@@ -1,0 +1,38 @@
+{
+    "id": 1,
+    "createdAt": "2015-01-04T10:10:34Z",
+    "customer": {
+        "id": 1,
+        "name": "Mary"
+    },
+    "items": [
+        {
+            "book": {
+                "id": 1,
+                "title": "Design Patterns: Elements of Reusable Object-Oriented Software"
+            },
+            "quantity": 2,
+            "price": 97.88
+        },
+        {
+            "book": {
+                "id": 2,
+                "title": "Refactoring: Improving the Design of Existing Code"
+            },
+            "quantity": 1,
+            "price": 31.16
+        }
+    ],    
+    "historyEntries": [
+        {
+            "createdAt": "2015-01-04T10:10:34Z",
+            "status": "RESERVED"
+        },
+        {
+            "createdAt": "2015-01-05T10:10:34Z",
+            "status": "DELIVERED"
+        }
+    ],
+    "total": 129.04,
+    "currentStatus": "DELIVERED"
+}

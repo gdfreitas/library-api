@@ -1,0 +1,27 @@
+{
+    "paging": {
+        "totalRecords": 2
+    },
+    "entries": [
+        {
+            "id": 1,
+            "createdAt": "2015-01-04T10:10:34Z",
+            "customer": {
+                "id": 1,
+                "name": "Mary"
+            },
+            "total": 129.04,
+            "currentStatus": "DELIVERED"
+        },
+        {
+            "id": 2,
+            "createdAt": "2015-01-05T10:10:34Z",
+            "customer": {
+                "id": 2,
+                "name": "John doe"
+            },
+            "total": 129.04,
+            "currentStatus": "RESERVED"
+        }        
+    ]
+}

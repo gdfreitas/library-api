@@ -48,6 +48,13 @@ public class Book implements Serializable {
     @NotNull(message = "may not be null")
     private Double price;
 
+    public Book() {
+    }
+
+    public Book(final Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

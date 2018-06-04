@@ -33,6 +33,13 @@ public final class OrderForTestsRepository {
         order.setInitialStatus();
         order.calculateTotal();
 
+        // necessário para diferenciar o timestamp entre duas criações ao mesmo tempo sendo adicionadas à um Set
+        // o comparator utiliza o timestamp de criação
+        try {
+            Thread.sleep(1);
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
+        }
         order.addHistoryEntry(OrderStatus.DELIVERED);
 
         return order;

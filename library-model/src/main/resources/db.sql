@@ -45,3 +45,30 @@ create table lib_book_author (
 	constraint fk_book_author_book foreign key(book_id) references lib_book(id),
 	constraint fk_book_author_author foreign key(author_id) references lib_author(id)
 );
+
+create table lib_order (
+	id bigserial not null primary key,
+	created_at timestamp not null,
+	customer_id bigint not null,
+	total decimal(5,2) not null,
+	current_status varchar(20) not null,
+	constraint fk_order_customer foreign key(customer_id) references lib_user(id)
+);
+
+create table lib_order_item (
+	order_id bigint not null,
+	book_id bigint not null,
+	quantity int not null,
+	price decimal(5,2) not null,
+	primary key(order_id, book_id),
+	constraint fk_order_item_order foreign key(order_id) references lib_order(id),
+	constraint fk_order_item_book foreign key(book_id) references lib_book(id)
+);
+
+create table lib_order_history (
+	order_id bigint not null,
+	status varchar(20) not null,
+	created_at timestamp not null,
+	primary key(order_id, status),
+	constraint fk_order_history_order foreign key(order_id) references lib_order(id)
+);

@@ -39,35 +39,33 @@ public class Order implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false)
-    private Date createAt;
+    private Date createdAt;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    @NotNull(message = "may not be null")
+    @NotNull
     private Customer customer;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "lib_order_item", joinColumns = @JoinColumn(name = "order_id"))
-    @NotNull(message = "may not be null")
+    @NotNull
     @Size(min = 1)
     private Set<OrderItem> items;
 
-    @NotNull(message = "may not be null")
+    @NotNull
     private Double total;
-
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "lib_order_history", joinColumns = @JoinColumn(name = "order_id"))
-    @NotNull(message = "may not be null")
+    @NotNull
     @Size(min = 1)
     private Set<OrderHistoryEntry> historyEntries;
-
     @Column(name = "current_status")
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "may not be null")
+    @NotNull
     private OrderStatus currentStatus;
 
     public Order() {
-        this.createAt = new Date();
+        this.createdAt = new Date();
     }
 
     public Long getId() {
@@ -78,12 +76,12 @@ public class Order implements Serializable {
         this.id = id;
     }
 
-    public Date getCreateAt() {
-        return createAt;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(final Date createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(final Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Customer getCustomer() {
@@ -193,7 +191,7 @@ public class Order implements Serializable {
 
     @Override
     public String toString() {
-        return "Order [id=" + id + ", createAt=" + createAt + ", customer=" + customer + ", total=" + total
+        return "Order [id=" + id + ", createdAt=" + createdAt + ", customer=" + customer + ", total=" + total
                 + ", currentStatus=" + currentStatus + "]";
     }
 

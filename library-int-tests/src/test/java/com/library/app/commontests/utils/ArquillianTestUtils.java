@@ -22,9 +22,12 @@ public class ArquillianTestUtils {
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsWebInfResource("jboss-web.xml")
                 .addAsResource("application.properties")
+                .addAsResource("META-INF/services/javax.enterprise.inject.spi.Extension")
                 .setWebXML(new File("src/test/resources/web.xml"))
                 .addAsLibraries(
-                        Maven.resolver().resolve("com.google.code.gson:gson:2.3.1", "org.mockito:mockito-core:1.9.5")
+                        Maven.resolver()
+                                .loadPomFromFile("pom.xml")
+                                .resolve("com.google.code.gson:gson", "org.mockito:mockito-core")
                                 .withTransitivity().asFile());
     }
 

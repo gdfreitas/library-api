@@ -11,11 +11,11 @@ import javax.ws.rs.Path;
 public class DBResource {
 
     @Inject
-    private TestRepositoryEJB tesRepositoryEJB;
+    private TestRepositoryEJB testRepositoryEJB;
 
     @DELETE
     public void deleteAll() {
-        tesRepositoryEJB.deleteAll();
+        testRepositoryEJB.deleteAll();
     }
 
 }

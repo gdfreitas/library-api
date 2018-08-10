@@ -13,6 +13,7 @@ import java.security.Principal;
 import java.util.Arrays;
 
 import javax.ejb.SessionContext;
+import javax.enterprise.event.Event;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
@@ -55,6 +56,9 @@ public class OrderServicesUTest {
     private BookServices bookServices;
 
     @Mock
+    private Event<Order> orderEvent;
+
+    @Mock
     private SessionContext sessionContext;
 
     private static final String LOGGED_EMAIL = "anyemail@domain.com";
@@ -72,6 +76,7 @@ public class OrderServicesUTest {
         ((OrderServicesImpl) orderServices).userServices = userServices;
         ((OrderServicesImpl) orderServices).bookServices = bookServices;
         ((OrderServicesImpl) orderServices).sessionContext = sessionContext;
+        ((OrderServicesImpl) orderServices).orderEvent = orderEvent;
 
         setUpLoggedEmail(LOGGED_EMAIL, Roles.ADMINISTRATOR);
     }

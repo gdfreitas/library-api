@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.validation.Validator;
 
@@ -48,6 +49,9 @@ public class OrderServicesImpl implements OrderServices {
     @Resource
     SessionContext sessionContext;
 
+    @Inject
+    Event<Order> orderEvent;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -59,6 +63,8 @@ public class OrderServicesImpl implements OrderServices {
         order.calculateTotal();
 
         ValidationUtils.validateEntityFields(validator, order);
+
+        sendEvent(order);
 
         return orderRepository.add(order);
     }
@@ -96,6 +102,8 @@ public class OrderServicesImpl implements OrderServices {
             throw new OrderStatusCannotBeChangedException(e.getMessage());
         }
 
+        sendEvent(order);
+
         orderRepository.update(order);
     }
 
@@ -132,6 +140,10 @@ public class OrderServicesImpl implements OrderServices {
                 item.setBook(book);
             }
         }
+    }
+
+    private void sendEvent(Order order) {
+        orderEvent.fire(order);
     }
 
 }

@@ -104,3 +104,35 @@ Em `$JBOSS_HOME\modules\system\layers\base\org\postgres\main`
     </authentication>
 </security-domain>
 ```
+
+### Logging
+```xml
+<subsystem xmlns="urn:jboss:domain:logging:2.0">
+    ...
+    <console-handler name="CONSOLE">
+        <level name="DEBUG"/>
+        <formatter>
+            <named-formatter name="COLOR-PATTERN"/>
+        </formatter>
+    </console-handler>
+    ...
+     <logger category="org.jboss.as.config">
+        <level name="INFO"/>
+    </logger>
+    <logger category="com.library.app">
+        <level name="DEBUG"/>
+    </logger>
+    ...
+</subsystem>
+```
+
+### JMS
+```xml
+<jms-destinations>
+    ...
+    <jms-queue name="Orders">
+        <entry name="java:/jms/queue/Orders"/>
+    </jms-queue>
+    ...
+</jms-destinations>
+```

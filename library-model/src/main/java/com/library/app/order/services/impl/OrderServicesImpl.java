@@ -26,6 +26,9 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.jms.JMSConnectionFactory;
+import javax.jms.JMSContext;
+import javax.jms.Queue;
 import javax.validation.Validator;
 
 /**
@@ -52,6 +55,13 @@ public class OrderServicesImpl implements OrderServices {
     @Inject
     Event<Order> orderEvent;
 
+    @Resource(mappedName = "java:/jms/queue/Orders")
+    private Queue ordersQueue;
+
+    @Inject
+    @JMSConnectionFactory("java:jboss/DefaultJMSConnectionFactory")
+    JMSContext jmsContext;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -65,6 +75,7 @@ public class OrderServicesImpl implements OrderServices {
         ValidationUtils.validateEntityFields(validator, order);
 
         sendEvent(order);
+        sendEventQueue(order);
 
         return orderRepository.add(order);
     }
@@ -103,6 +114,7 @@ public class OrderServicesImpl implements OrderServices {
         }
 
         sendEvent(order);
+        sendEventQueue(order);
 
         orderRepository.update(order);
     }
@@ -142,8 +154,12 @@ public class OrderServicesImpl implements OrderServices {
         }
     }
 
-    private void sendEvent(Order order) {
+    private void sendEvent(final Order order) {
         orderEvent.fire(order);
+    }
+
+    private void sendEventQueue(final Order order) {
+        jmsContext.createProducer().send(ordersQueue, order);
     }
 
 }

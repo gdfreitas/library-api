@@ -1,0 +1,37 @@
+{
+  "paging": {
+    "totalRecords": 3
+  },
+  "entries": [
+    {
+      "id": 1,
+      "createdAt": "2015-01-08T19:32:22Z",
+      "user": {
+        "id": 1,
+        "name": "Admin"
+      },
+      "action": "ADD",
+      "element": "Category"
+    },
+    {
+      "id": 2,
+      "createdAt": "2015-01-09T19:32:22Z",
+      "user": {
+        "id": 1,
+        "name": "Admin"
+      },
+      "action": "UPDATE",
+      "element": "Category"
+    },
+    {
+      "id": 3,
+      "createdAt": "2015-01-10T19:32:22Z",
+      "user": {
+        "id": 2,
+        "name": "John doe"
+      },
+      "action": "ADD",
+      "element": "Order"
+    }
+  ]
+}

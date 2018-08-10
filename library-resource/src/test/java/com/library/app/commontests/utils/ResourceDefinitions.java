@@ -12,7 +12,8 @@ public enum ResourceDefinitions {
     AUTHOR("authors"),
     USER("users"),
     BOOK("books"),
-    ORDER("orders");
+    ORDER("orders"),
+    LOGAUDIT("logsaudit");
 
     private String resourceName;
 

@@ -28,5 +28,7 @@ public interface OrderServices {
 
     PaginatedData<Order> findByFilter(OrderFilter orderFilter);
 
+    void changeStatusOfExpiredOrders(int daysBeforeOrderExpiration);
+
 }
 

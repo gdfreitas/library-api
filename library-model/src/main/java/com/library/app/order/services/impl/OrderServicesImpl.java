@@ -1,15 +1,10 @@
 package com.library.app.order.services.impl;
 
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.validation.Validator;
-
 import com.library.app.book.model.Book;
 import com.library.app.book.services.BookServices;
 import com.library.app.common.exception.UserNotAuthorizedException;
 import com.library.app.common.model.PaginatedData;
+import com.library.app.common.utils.DateUtils;
 import com.library.app.common.utils.ValidationUtils;
 import com.library.app.order.exception.OrderNotFoundException;
 import com.library.app.order.exception.OrderStatusCannotBeChangedException;
@@ -23,6 +18,14 @@ import com.library.app.user.model.Customer;
 import com.library.app.user.model.User;
 import com.library.app.user.model.User.Roles;
 import com.library.app.user.services.UserServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.validation.Validator;
 
 /**
  * @author gabriel.freitas
@@ -44,6 +47,8 @@ public class OrderServicesImpl implements OrderServices {
 
     @Resource
     SessionContext sessionContext;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public Order add(final Order order) {
@@ -97,6 +102,22 @@ public class OrderServicesImpl implements OrderServices {
     @Override
     public PaginatedData<Order> findByFilter(final OrderFilter orderFilter) {
         return orderRepository.findByFilter(orderFilter);
+    }
+
+    @Override
+    public void changeStatusOfExpiredOrders(final int daysBeforeOrderExpiration) {
+        logger.debug("Finding order to be expired that are reserved with more than {} days", daysBeforeOrderExpiration);
+
+        final OrderFilter orderFilter = new OrderFilter();
+        orderFilter.setEndDate(DateUtils.currentDatePlusDays(-daysBeforeOrderExpiration));
+        orderFilter.setStatus(OrderStatus.RESERVED);
+
+        final PaginatedData<Order> ordersToBeExpired = findByFilter(orderFilter);
+        logger.debug("Found {} orders to be expired", ordersToBeExpired.getNumberOfRows());
+        for (final Order order : ordersToBeExpired.getRows()) {
+            updateStatus(order.getId(), OrderStatus.RESERVATION_EXPIRED);
+        }
+        logger.debug("Orders expired!");
     }
 
     private void checkCustomerAndSetItOnOrder(final Order order) {

@@ -22,7 +22,7 @@ public class OrderNotificationReceiverJMS implements MessageListener {
     @Override
     public void onMessage(final Message message) {
         try {
-            logger.debug("Order notification received {}", message.getBody(Order.class));
+            logger.debug("Order notification received from queue {}", message.getBody(Order.class));
         } catch (JMSException e) {
             logger.error("Could not read the body of message");
         }

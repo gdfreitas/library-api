@@ -2,7 +2,7 @@
 
 Este repositório contém um projeto baseado em um agregado de tecnologias com o objetivo de estudar e praticar os recursos abordados;
 
-O projeto consiste em uma api para gerênciamento de uma biblioteca, com cadastro de autores, livros, categorias de livros, e cadastro de usuários. Possui recursos de autenticação para cada recurso conforme os papéis de cada usuário, assim como também controla a expiração do tempo de aluguel de cada livro.
+O projeto consiste em uma api para gerênciamento de uma biblioteca, com cadastro de autores, livros, categorias de livros, e cadastro de usuários. Possui autenticação para cada recurso disponibilizado conforme os papéis de cada usuário, controle de expiração do tempo de aluguel de cada livro, auditoria de ações realizadas em alguns recursos, etc.
 
 ## Tecnologias abordadas
 

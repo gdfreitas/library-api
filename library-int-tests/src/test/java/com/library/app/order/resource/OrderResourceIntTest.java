@@ -1,17 +1,16 @@
 package com.library.app.order.resource;
 
-import static com.library.app.commontests.order.OrderForTestsRepository.*;
-import static com.library.app.commontests.order.OrderTestUtils.*;
-import static com.library.app.commontests.user.UserForTestsRepository.*;
-import static com.library.app.commontests.utils.FileTestNameUtils.*;
-import static com.library.app.commontests.utils.JsonTestUtils.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
-import java.net.URL;
-
-import javax.ws.rs.core.Response;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.library.app.book.model.Book;
+import com.library.app.common.json.JsonReader;
+import com.library.app.common.json.JsonWriter;
+import com.library.app.common.model.HttpCode;
+import com.library.app.commontests.utils.*;
+import com.library.app.order.model.Order;
+import com.library.app.order.model.Order.OrderStatus;
+import com.library.app.order.model.OrderHistoryEntry;
+import com.library.app.order.model.OrderItem;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -21,21 +20,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.library.app.book.model.Book;
-import com.library.app.common.json.JsonReader;
-import com.library.app.common.json.JsonWriter;
-import com.library.app.common.model.HttpCode;
-import com.library.app.commontests.utils.ArquillianTestUtils;
-import com.library.app.commontests.utils.IntTestUtils;
-import com.library.app.commontests.utils.JsonTestUtils;
-import com.library.app.commontests.utils.ResourceClient;
-import com.library.app.commontests.utils.ResourceDefinitions;
-import com.library.app.order.model.Order;
-import com.library.app.order.model.Order.OrderStatus;
-import com.library.app.order.model.OrderHistoryEntry;
-import com.library.app.order.model.OrderItem;
+import javax.ws.rs.core.Response;
+import java.net.URL;
+
+import static com.library.app.commontests.order.OrderForTestsRepository.orderReserved;
+import static com.library.app.commontests.order.OrderTestUtils.getStatusAsJson;
+import static com.library.app.commontests.user.UserForTestsRepository.admin;
+import static com.library.app.commontests.user.UserForTestsRepository.johnDoe;
+import static com.library.app.commontests.utils.FileTestNameUtils.getPathFileResponse;
+import static com.library.app.commontests.utils.JsonTestUtils.assertJsonMatchesFileContent;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author gabriel.freitas
@@ -106,7 +101,6 @@ public class OrderResourceIntTest {
         final Response response = resourceClient.user(johnDoe())
                 .resourcePath(PATH_RESOURCE + "/" + orderId + "/status")
                 .postWithContent(getStatusAsJson(OrderStatus.DELIVERED));
-
         assertThat(response.getStatus(), is(equalTo(HttpCode.FORBIDDEN.getCode())));
     }
 
@@ -185,7 +179,8 @@ public class OrderResourceIntTest {
     }
 
     private Long loadBookIdFromRest(final Book book) {
-        final Response response = resourceClient.resourcePath("DB/" + ResourceDefinitions.BOOK.getResourceName() + "/" + book.getTitle()).get();
+        final Response response = resourceClient.resourcePath(
+                "DB/" + ResourceDefinitions.BOOK.getResourceName() + "/" + book.getTitle()).get();
         assertThat(response.getStatus(), is(equalTo(HttpCode.OK.getCode())));
 
         final String bodyResponse = response.readEntity(String.class);

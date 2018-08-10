@@ -3,6 +3,7 @@ package com.library.app.commontests.utils;
 import com.library.app.author.model.Author;
 import com.library.app.book.model.Book;
 import com.library.app.category.model.Category;
+import com.library.app.logaudit.model.LogAudit;
 import com.library.app.order.model.Order;
 import com.library.app.user.model.User;
 import org.junit.Ignore;
@@ -21,6 +22,7 @@ import java.util.List;
 public class TestRepositoryEJB {
 
     private static final List<Class<?>> ENTITIES_TO_REMOVE = Arrays.asList(
+            LogAudit.class,
             Order.class,
             Book.class,
             User.class,

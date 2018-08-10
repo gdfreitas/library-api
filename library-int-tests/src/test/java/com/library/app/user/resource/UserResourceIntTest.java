@@ -37,8 +37,10 @@ import static org.junit.Assert.assertThat;
 public class UserResourceIntTest {
 
     private static final String PATH_RESOURCE = ResourceDefinitions.USER.getResourceName();
+
     @ArquillianResource
     private URL deploymentUrl;
+
     private ResourceClient resourceClient;
 
     @Deployment

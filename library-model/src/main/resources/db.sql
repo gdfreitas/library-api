@@ -72,3 +72,12 @@ create table lib_order_history (
 	primary key(order_id, status),
 	constraint fk_order_history_order foreign key(order_id) references lib_order(id)
 );
+
+create table lib_log_audit (
+	id bigserial not null primary key,
+	created_at timestamp not null,
+	user_id bigint not null,
+	action varchar(15) not null,
+	element varchar(30) not null,
+	constraint fk_logaudit_user foreign key(user_id) references lib_user(id)
+);
